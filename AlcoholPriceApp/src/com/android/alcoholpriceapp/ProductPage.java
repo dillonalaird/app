@@ -29,7 +29,7 @@ public class ProductPage extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				// TODO change from toast to change activity
-				Intent intent = new Intent(getBaseContext(), StorePage.class);
+				Intent intent = new Intent(ProductPage.this, StorePage.class);
 				intent.putExtra(EXTRA_MESSAGE, listView.getItemAtPosition(arg2).toString());
 				startActivity(intent);
 				
