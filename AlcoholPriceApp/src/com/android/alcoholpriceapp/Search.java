@@ -1,15 +1,22 @@
 package com.android.alcoholpriceapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.alcoholpriceapp.menu.MenuControl;
 
@@ -25,6 +32,12 @@ public class Search extends Activity {
 	private Spinner sizeSpinner;
 	/** Search button initiates the search process. */
 	private Button searchButton;
+	/** A waiting dialog that pops up to notify the user the app is currently
+	 * conducting the requested search.
+	 */
+	private ProgressDialog progressDialog;
+	/** The size of the alcohol the user has selected. */
+	private String selectedSize;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +46,17 @@ public class Search extends Activity {
 
 		findAllViewsById();
 		initSpinner();
+		// This is so we can grab the item currently selected in the spinner
+		sizeSpinner.setOnItemSelectedListener(new SpinnerActivity());
+		
+		searchButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String alcohol = searchEditText.getText().toString();
+				if (checkInput(alcohol, selectedSize))
+					performSearch(cleanText(alcohol), selectedSize);
+			}
+		});
 	}
 
 
@@ -59,14 +83,35 @@ public class Search extends Activity {
 		sizeSpinner.setAdapter(adapter);
 		sizeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	}
-
-	public void addListenerOnButton() {
-		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// This is where we need to send the HTTP request to the server
-			}
-		});
+	
+	/**
+	 * Checks the input to make sure the user has actually put in the product name
+	 * and size data.
+	 * @param alcohol
+	 * 			The alcohol product name the user is trying to search for.
+	 * @param size
+	 * 			The size of the alcohol the user is trying to search for.
+	 * @return
+	 */
+	private boolean checkInput(String alcohol, String size) {
+		if (alcohol == null) {
+			Toast.makeText(this, "Please type in an alcohol product name",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		} else if (size.equals("Select Size of Alcohol")) {
+			Toast.makeText(this, "Please select an alcohol size",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Cleans the search query by converting it to all lower cases and 
+	 * trimming leading and tailing spaces.
+	 */
+	private String cleanText(String text) {
+		return text.toLowerCase().trim();
 	}
 
     @Override
@@ -82,4 +127,89 @@ public class Search extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	return MenuControl.selectMenuItem(item, this);
     }
+    
+    /**
+     * Performs the search when the search button is clicked. Pops up a progress
+     * dialog that can be canceled using the back button.
+     * 
+     * @param alcohol
+     * 			The alcohol product name the user is trying to search for.
+     * @param size
+     * 			The size of the alcohol the user is trying to search for.
+     */
+    private void performSearch(String alcohol, String size) {
+    	progressDialog = ProgressDialog.show(Search.this, "Please wait...",
+    			"Retrieving data...", true, true);
+    	
+    	String data = null;
+    	final GetSearchData searchTask = new GetSearchData();
+    	try {
+			data = searchTask.execute(alcohol, size).get();
+			Toast.makeText(this, "search has completed", Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			// do something important here...
+			e.printStackTrace();
+		} 
+    	
+    	progressDialog.setOnCancelListener(new OnCancelListener() {
+    		@Override
+    		public void onCancel(DialogInterface dialog) {
+    			if (searchTask != null) searchTask.cancel(true);
+    		}
+    	});
+    	Toast.makeText(this, "set on cancle listener", Toast.LENGTH_SHORT).show();
+    	Intent intent = new Intent(this, ProductPage.class);
+    	intent.putExtra("data", data);
+    	Toast.makeText(this, "created intent", Toast.LENGTH_SHORT).show();
+    	startActivity(intent);
+    	Toast.makeText(this, "started activity", Toast.LENGTH_SHORT).show();
+    }
+    
+    /**
+     * SpinnerActivity allows us to set selectedSize to the current item selected
+     * on the sizeSpinner.
+     */
+    public class SpinnerActivity extends Activity implements OnItemSelectedListener {
+    	public void onItemSelected(AdapterView<?> parent, View view,
+    			int pos, long id) {
+    		
+    		// Converts the sizes to String representations of ints so the database
+    		// can parse them easier
+    		String size = parent.getItemAtPosition(pos).toString();
+    		if (size.equals("Single"))
+    			size = "0";
+    		else if (size.equals("40 oz"))
+    			size = "1";
+    		else if (size.equals("6 pack"))
+    			size = "2";
+    		else if (size.equals("12 pack"))
+    			size = "3";
+    		else if (size.equals("18 pack"))
+    			size = "4";
+    		else if (size.equals("24 pack"))
+    			size = "5";
+    		else if (size.equals("16 oz (pint)"))
+    			size = "6";
+    		else if (size.equals("750mL (fifth)"))
+    			size = "7";
+    		else // if (size.equals("1.5L (half gallon)"))
+    			size = "8";
+    		selectedSize = size;
+    	}
+    	
+    	public void onNothingSelected(AdapterView<?> parent) {
+    		// do nothing
+    	}
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
