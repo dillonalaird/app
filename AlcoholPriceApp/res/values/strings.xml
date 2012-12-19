@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Alcohol Prices</string>
+    <string name="menu_settings">Settings</string>
+    
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_browse">Browse</string>
+    <string name="title_activity_product_page">Product Page</string>
+    <string name="title_activity_store_page">Store Page</string>
+    <string name="title_activity_type_page">Type Page</string>
+    
+    <string name="enter_product_name">Enter Product Name</string>
+    <string name="select_size">Select Size</string>
+    <string name="search">Search</string>
+    
+    <string name="select_alcohol_type">Select Alcohol Type</string>
+    <string name="browse">Browse</string>
+    
+    <string-array name="types_of_alcohol">
+        <item>Select Type of Alcohol</item>
+        <item>Vodka</item>
+        <item>Whisky</item>
+        <item>Tequila</item>
+        <item>Rum</item>
+        <item>Gin</item>
+        <item>Brandy</item>
+    </string-array>
+    
+    <string-array name="size_of_alcohol">
+        <item>Select Size of Alcohol</item>
+        <item>Single</item>
+        <item>40 oz</item>
+        <item>6 pack</item>
+        <item>12 pack</item>
+        <item>18 pack</item>
+        <item>24 pack</item>
+        <item>16 oz (pint)</item>
+        <item>750mL (fifth)</item>
+        <item>1.5L (half gallon)</item>
+    </string-array>
+
+</resources>
