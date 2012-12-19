@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/itemsListView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/title_activity_product_page"
-        tools:context=".ProductPage" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+		android:divider="#000" 
+		android:dividerHeight="1px" >
+    </ListView>
 
 </RelativeLayout>
