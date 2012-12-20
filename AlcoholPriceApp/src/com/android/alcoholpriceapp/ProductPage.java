@@ -1,5 +1,7 @@
 package com.android.alcoholpriceapp;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,17 @@ public class ProductPage extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_page);
+        
+        Intent parentIntent = getIntent();
+        String searchResponse = parentIntent.getStringExtra("data");
+        Toast.makeText(getBaseContext(), searchResponse, 1000).show();
+        try {
+        	JSONArray jsonResponse = new JSONArray(searchResponse);
+        	
+        	Toast.makeText(getBaseContext(), jsonResponse.toString(), 1000).show();
+        } catch (Exception e) {
+        	Toast.makeText(getBaseContext(), "exception caught", 1000).show();
+        }
         
         String[] testArray = {"troy", "Dillon", "Shane", "Raj"};
         

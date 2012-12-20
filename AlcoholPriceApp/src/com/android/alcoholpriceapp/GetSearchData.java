@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 public class GetSearchData extends AsyncTask<String, Integer, String> {
 
@@ -32,7 +33,7 @@ public class GetSearchData extends AsyncTask<String, Integer, String> {
 			in.close();
 			data = sb.toString();
 		} catch(Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 		} finally {
 			if(in != null) {
 				try {

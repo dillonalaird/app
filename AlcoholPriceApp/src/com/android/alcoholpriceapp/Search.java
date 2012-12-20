@@ -140,16 +140,18 @@ public class Search extends Activity {
     private void performSearch(String alcohol, String size) {
     	progressDialog = ProgressDialog.show(Search.this, "Please wait...",
     			"Retrieving data...", true, true);
-    	
+
+		Toast.makeText(getBaseContext(), cleanText(alcohol)+size, 1000).show();
     	String data = null;
     	final GetSearchData searchTask = new GetSearchData();
     	try {
 			data = searchTask.execute(alcohol, size).get();
-			Toast.makeText(this, "search has completed", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			// do something important here...
 			e.printStackTrace();
 		} 
+    	
+    	Toast.makeText(getBaseContext(), data, 1000).show();
     	
     	progressDialog.setOnCancelListener(new OnCancelListener() {
     		@Override
@@ -157,12 +159,9 @@ public class Search extends Activity {
     			if (searchTask != null) searchTask.cancel(true);
     		}
     	});
-    	Toast.makeText(this, "set on cancle listener", Toast.LENGTH_SHORT).show();
     	Intent intent = new Intent(this, ProductPage.class);
     	intent.putExtra("data", data);
-    	Toast.makeText(this, "created intent", Toast.LENGTH_SHORT).show();
     	startActivity(intent);
-    	Toast.makeText(this, "started activity", Toast.LENGTH_SHORT).show();
     }
     
     /**
