@@ -89,4 +89,11 @@ public class Product {
 		// make it so the product page just has a result stating no results
 		// found
 	}
+	
+	/**
+	 *  productInfos getter 
+	 */
+	public ArrayList<ProductInfo> getProductInfos() {
+		return productInfos;
+	}
 }
