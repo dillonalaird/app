@@ -95,7 +95,8 @@ public class Product implements Parcelable {
 		// for details.
 		lat1 = degToRad(lat1);
 		long1 = degToRad(long1);
-		lat2 = degToRad(long2);
+		lat2 = degToRad(lat2);
+		long2 = degToRad(long2);
 		
 		double earthRadius = 6371; // km
 		double deltaLat = lat2 - lat1;
