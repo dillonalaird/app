@@ -8,7 +8,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +24,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
+import com.android.alcoholpriceapp.network.GetSearchData;
 
 /**
  * The search page for the Alcohol Price Application. Allows the user to search
@@ -146,12 +150,6 @@ public class Search extends Activity {
 			data = searchTask.execute(alcohol, size).get();
 		} catch (Exception e) {
 			// not network error, this is an exception thrown by AsyncTask's execute method
-//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			builder
-//				.setTitle("Network Error")
-//				.setMessage("A problem with the network connection has occured")
-//				.setPositiveButton("Okay", null)
-//				.show();
 		} 
 
     	progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -162,11 +160,58 @@ public class Search extends Activity {
     	});
 
     	Log.v("data", data);
-    	Product product = new Product(data);
-
-    	Intent intent = new Intent(this, ProductPage.class);
-    	intent.putExtra("data", data);
-    	startActivity(intent);
+    	if (handleResponse(new Response(data))) {
+    		Location location = getLocation();
+    		if (location != null) {
+	    		// Check http://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents/2141166#2141166
+	    		// for how to retrieve Parcelable object.
+	    		Parcelable product = new Product(data, alcohol, size, location);
+	    		
+	    		Intent intent = new Intent(this, ProductPage.class);
+	    		intent.putExtra("Product", product);
+	    		startActivity(intent);
+    		}
+    	}
+    }
+    
+    private Location getLocation() {
+    	GPSTracker gps = new GPSTracker(this);
+    	if (!gps.canGetLocation()) // if gps isn't enabled
+    		gps.showSettingsAlert();
+    	
+    	if (gps.canGetLocation())
+    		return gps.getLocation();
+    	else {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder
+    			.setTitle("Error")
+    			.setMessage("Please enable GPS")
+    			.setPositiveButton("Okay", null)
+    			.show();
+    		return null;
+    	}
+    }
+    
+    /**
+     * Handles the response by checking the status of the response and creating an
+     * alert dialog if the search returned no results.
+     * 
+     * @param response
+     * 			The Response object containing the status of the response.
+     * @return true if the response status was good (if data was returned) and false
+     * otherwise.
+     */
+    private boolean handleResponse(Response response) {
+    	if (!response.getStatus()) {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder
+    			.setTitle("Sorry!")
+    			.setMessage("We could not find that alcohol in our database.")
+    			.setPositiveButton("Okay", null)
+    			.show();
+    		return false;
+    	}
+    	return true;
     }
     
     /**

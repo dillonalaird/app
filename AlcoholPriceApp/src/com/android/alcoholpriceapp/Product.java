@@ -6,16 +6,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
- * Product takes in a JSON string and grab each item in the "data" field and
- * stores it in a ProducInfo object. It then stores a list of ProductInfo 
- * objects that represents the different prices or store locations the product
- * might have. For example, Coors Light might be $9.99 at Safeway 1.2 miles
- * away and $10.99 at QFC 1.0 miles away.
+ * Product represents an alcohol product. It takes in a JSON string and grab 
+ * each item in the "data" field and stores it in a ProducInfo object. It then 
+ * stores a list of ProductInfo objects that represents the different prices 
+ * or store locations the product might have. For example, Coors Light might be
+ * $9.99 at Safeway 1.2 miles away and $10.99 at QFC 1.0 miles away.
  */
-public class Product {
+public class Product implements Parcelable {
+	private int mData;
+	private Location location;
+	/** Product name of this alcohol. */
+	private String productName;
+	/** Size of this alcohol. */
+	private String size;
 	/** The list of ProductInfo's for the given product. */
 	private ArrayList<ProductInfo> productInfos;
 	// Test string
@@ -29,24 +37,18 @@ public class Product {
 	 * @param jsonStr
 	 * 			The JSON string being parsed for it's data field.
 	 */
-	public Product(String tmp) {
+	public Product(String jsonStr, String productName, String size, Location location) {
+		this.location = location;
 		productInfos = new ArrayList<ProductInfo>();
-		Log.v("entered Product with", tmp);
+		this.productName = productName;
+		this.size = size;
+		
 		try {
-			JSONObject dataObj = new JSONObject(jsonStr);
-			String status = dataObj.getJSONObject("result").getString("status");
-			
-			// handles error 400, no search results found
-			if (status.equals("400"))
-				noSearchResultsFound();
-			else
-				parseData(dataObj);
-		} catch (JSONException je) {
-			// This should already be checked by checkRequest in Search
-			// since it'll throw the same error if there's something wrong
-			// with the JSON. The only other reason an exception would
-			// be thrown is if one of the fields was named incorrectly
-			// and parseData couldn't find it.
+			parseData(new JSONObject(jsonStr));
+		} catch (JSONException e) {
+			// This should already be checked by Response. The only other reason
+			// an exception would be thrown is if one of the fields was named 
+			// incorrectly and parseData couldn't find it.
 		}
 	}
 	
@@ -78,15 +80,90 @@ public class Product {
 	 * coordinates.
 	 * 
 	 * @param GPSCoord
-	 * 			GPS coordinates.
+	 * 			GPS coordinates. Assumes that GPSCoord follows the following
+	 * format "latitude, longitude"
 	 * @return the distance between GPSCoord and the users current GPS coordinates.
 	 */
 	private double calculateGPSDistance(String GPSCoord) {
-		return 0.0;
+		double lat1 = location.getLatitude();
+		double long1 = location.getLongitude();
+		String[] coordinates = GPSCoord.split(",");
+		double lat2 = Double.parseDouble(coordinates[0]);
+		double long2 = Double.parseDouble(coordinates[1]);
+		
+		// Check http://www.smokycogs.com/blog/finding-the-distance-between-two-gps-coordinates/
+		// for details.
+		lat1 = degToRad(lat1);
+		long1 = degToRad(long1);
+		lat2 = degToRad(long2);
+		
+		double earthRadius = 6371; // km
+		double deltaLat = lat2 - lat1;
+		double deltaLong = long2 - long1;
+		double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0) + 
+				Math.cos(lat1) * Math.cos(lat2) *
+				Math.sin(deltaLong / 2.0) * Math.sin(deltaLong / 2.0);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double distance = earthRadius * c;
+		return distance;
 	}
 	
-	private void noSearchResultsFound() {
-		// make it so the product page just has a result stating no results
-		// found
+	private double radToDeg(double radians) {
+		return radians * (180 / Math.PI);
+	}
+	
+	private double degToRad(double degrees) {
+		return degrees * (Math.PI / 180);
+	}
+	
+	/*
+	 * GETTER METHODS
+	 */
+	
+	public String getProductName() {
+		return productName;
+	}
+	
+	public String getSize() {
+		return size;
+	}
+	
+	/*
+	 * Check http://developer.android.com/reference/android/os/Parcelable.html
+	 * for details. These are all methods for Parcelable.
+	 */
+	
+	public int describeContents() {
+		return 0;
+	}
+	
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeInt(mData);
+	}
+	
+	public static final Parcelable.Creator<Product> CREATOR 
+			= new Parcelable.Creator<Product>() {
+		public Product createFromParcel(Parcel in) {
+			return new Product(in);
+		}
+		
+		public Product[] newArray(int size) {
+			return new Product[size];
+		}
+		
+	};
+	
+	private Product(Parcel in) {
+		mData = in.readInt();
 	}
 }
+
+
+
+
+
+
+
+
+
+
