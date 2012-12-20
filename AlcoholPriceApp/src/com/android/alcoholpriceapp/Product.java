@@ -156,6 +156,13 @@ public class Product implements Parcelable {
 	private Product(Parcel in) {
 		mData = in.readInt();
 	}
+	
+	/**
+	 *  productInfos getter 
+	 */
+	public ArrayList<ProductInfo> getProductInfos() {
+		return productInfos;
+	}
 }
 
 
