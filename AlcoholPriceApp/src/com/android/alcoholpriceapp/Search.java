@@ -1,11 +1,15 @@
 package com.android.alcoholpriceapp;
 
+
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,7 +58,7 @@ public class Search extends Activity {
 			public void onClick(View v) {
 				String alcohol = searchEditText.getText().toString();
 				if (checkInput(alcohol, selectedSize))
-					performSearch(cleanText(alcohol), selectedSize);
+					performSearch(alcohol.toLowerCase().trim(), selectedSize);
 			}
 		});
 	}
@@ -105,15 +109,10 @@ public class Search extends Activity {
 		}
 		return true;
 	}
-	
-	/**
-	 * Cleans the search query by converting it to all lower cases and 
-	 * trimming leading and tailing spaces.
-	 */
-	private String cleanText(String text) {
-		return text.toLowerCase().trim();
-	}
 
+	/**
+	 * Creates the options menu to display on this activity.
+	 */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -141,24 +140,30 @@ public class Search extends Activity {
     	progressDialog = ProgressDialog.show(Search.this, "Please wait...",
     			"Retrieving data...", true, true);
 
-		Toast.makeText(getBaseContext(), cleanText(alcohol)+size, 1000).show();
     	String data = null;
     	final GetSearchData searchTask = new GetSearchData();
     	try {
 			data = searchTask.execute(alcohol, size).get();
 		} catch (Exception e) {
-			// do something important here...
-			e.printStackTrace();
+			// not network error, this is an exception thrown by AsyncTask's execute method
+//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//			builder
+//				.setTitle("Network Error")
+//				.setMessage("A problem with the network connection has occured")
+//				.setPositiveButton("Okay", null)
+//				.show();
 		} 
-    	
-    	Toast.makeText(getBaseContext(), data, 1000).show();
-    	
+
     	progressDialog.setOnCancelListener(new OnCancelListener() {
     		@Override
     		public void onCancel(DialogInterface dialog) {
     			if (searchTask != null) searchTask.cancel(true);
     		}
     	});
+
+    	Log.v("data", data);
+    	Product product = new Product(data);
+
     	Intent intent = new Intent(this, ProductPage.class);
     	intent.putExtra("data", data);
     	startActivity(intent);
