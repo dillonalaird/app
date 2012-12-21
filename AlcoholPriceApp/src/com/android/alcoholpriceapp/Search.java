@@ -1,5 +1,7 @@
 package com.android.alcoholpriceapp;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -45,6 +47,23 @@ public class Search extends Activity {
 	/** The size of the alcohol the user has selected. */
 	private String selectedSize;
 
+	/**
+	 * Creates the options menu to display on this activity.
+	 */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    
+    /**
+     * Runs MenuControl when a certain menu item is selected.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	return MenuControl.selectMenuItem(item, this);
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,16 +74,8 @@ public class Search extends Activity {
 		// This is so we can grab the item currently selected in the spinner
 		sizeSpinner.setOnItemSelectedListener(new SpinnerActivity());
 		
-		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String alcohol = searchEditText.getText().toString();
-				if (checkInput(alcohol, selectedSize))
-					performSearch(alcohol.toLowerCase().trim(), selectedSize);
-			}
-		});
+		searchButton.setOnClickListener(onSearchClickListener);
 	}
-
 
 	/**
 	 * Finds all the views by their id listed in R.java. This is used to grab
@@ -91,6 +102,47 @@ public class Search extends Activity {
 	}
 	
 	/**
+	 * onSearchClickListener is a listener applied to the search button. 
+	 * Mainly used to clean up the onCreate function
+	 */
+	private OnClickListener onSearchClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			String alcohol = searchEditText.getText().toString();
+			if (checkInput(alcohol, selectedSize)) {
+				//perform HTTP request
+				String data = performSearch(alcohol.toLowerCase().trim(), selectedSize);
+		    	
+		    	//create a response object
+		    	Response res = new Response(data);
+		    	if (res.getSuccess()) {
+		    		Location location = getLocation();
+		    		if (location != null) {
+			    		// Check http://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents/2141166#2141166
+			    		// for how to retrieve Parcelable object.
+			    		Parcelable product = new Product(res.getData(), alcohol.toLowerCase(Locale.ENGLISH).trim(), selectedSize, location);
+			    		
+			    		Intent intent = new Intent(Search.this, ProductPage.class);
+			    		intent.putExtra("Product", product);
+			    		startActivity(intent);
+		    		} else {
+		    			// TODO: if location comes back null? 
+		    		}
+		    	} else {
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(Search.this);
+		    		builder
+		    			.setTitle("Sorry!")
+		    			.setMessage("We could not find that alcohol in our database.")
+		    			.setPositiveButton("Okay", null)
+		    			.show();
+		    	}
+			} //no else needed because check input makes the toasts
+		}
+		
+	};
+	
+	/**
 	 * Checks the input to make sure the user has actually put in the product name
 	 * and size data.
 	 * @param alcohol
@@ -101,33 +153,14 @@ public class Search extends Activity {
 	 */
 	private boolean checkInput(String alcohol, String size) {
 		if (alcohol == null) {
-			Toast.makeText(this, "Please type in an alcohol product name",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please type in an alcohol product name", Toast.LENGTH_SHORT).show();
 			return false;
 		} else if (size.equals("Select Size of Alcohol")) {
-			Toast.makeText(this, "Please select an alcohol size",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;
 	}
-
-	/**
-	 * Creates the options menu to display on this activity.
-	 */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-    
-    /**
-     * Runs MenuControl when a certain menu item is selected.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	return MenuControl.selectMenuItem(item, this);
-    }
     
     /**
      * Performs the search when the search button is clicked. Pops up a progress
@@ -138,18 +171,12 @@ public class Search extends Activity {
      * @param size
      * 			The size of the alcohol the user is trying to search for.
      */
-    private void performSearch(String alcohol, String size) {
+	private String performSearch(String alcohol, String size) {
     	progressDialog = ProgressDialog.show(Search.this, "Please wait...",
     			"Retrieving data...", true, true);
 
     	String data = null;
     	final GetSearchData searchTask = new GetSearchData();
-    	try {
-			data = searchTask.execute(alcohol, size).get();
-		} catch (Exception e) {
-			// not network error, this is an exception thrown by AsyncTask's execute method
-			// TODO: AsyncTask execute exception
-		} 
 
     	progressDialog.setOnCancelListener(new OnCancelListener() {
     		@Override
@@ -157,20 +184,15 @@ public class Search extends Activity {
     			if (searchTask != null) searchTask.cancel(true);
     		}
     	});
-
-    	Log.v("data", data);
-    	if (handleResponse(new Response(data))) {
-    		Location location = getLocation();
-    		if (location != null) {
-	    		// Check http://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents/2141166#2141166
-	    		// for how to retrieve Parcelable object.
-	    		Parcelable product = new Product(data, alcohol, size, location);
-	    		
-	    		Intent intent = new Intent(this, ProductPage.class);
-	    		intent.putExtra("Product", product);
-	    		startActivity(intent);
-    		}
-    	}
+    	
+    	try {
+			data = searchTask.execute(alcohol, size).get();
+		} catch (Exception e) {
+			// not network error, this is an exception thrown by AsyncTask's execute method
+			// TODO: AsyncTask execute exception
+		} 
+    	progressDialog.cancel();
+		return data;
     }
     
     /**
@@ -196,28 +218,6 @@ public class Search extends Activity {
     			.show();
     		return null;
     	}
-    }
-    
-    /**
-     * Handles the response by checking the status of the response and creating an
-     * alert dialog if the search returned no results.
-     * 
-     * @param response
-     * 			The Response object containing the status of the response.
-     * @return true if the response status was good (if data was returned) and false
-     * otherwise.
-     */
-    private boolean handleResponse(Response response) {
-    	if (!response.getStatus()) {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		builder
-    			.setTitle("Sorry!")
-    			.setMessage("We could not find that alcohol in our database.")
-    			.setPositiveButton("Okay", null)
-    			.show();
-    		return false;
-    	}
-    	return true;
     }
     
     /**

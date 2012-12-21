@@ -12,39 +12,60 @@ import android.widget.Toast;
 
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
 
+/**
+ * Product page is the activity that shows different prices for the particular alcohol/size
+ * combination. The intent that creates it has a parcelable Product object passed into it 
+ * from which ProductPage created it's layout.
+ * 
+ * TODO: make the products sort by distance from phone
+ * 
+ * @author Troy Cosentino
+ */
 public class ProductPage extends Activity {
+	//will be removed, used to pass through to the store page for testing
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+	
+	private ListView listView;
 
+	/**
+	 * Called when the Activity is created. Creates the Product object from the parcel 
+	 * passed through the intent. Then creates the adapter and populates the list view.
+	 * Finally, sets a listener for when an item in the listview is clicked.
+	 */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_page);
         
-        //Intent parentIntent = getIntent();
-        //String searchResponse = parentIntent.getStringExtra("data");
+        Bundle bundle = getIntent().getExtras();
+        Product product = bundle.getParcelable("Product");
         
-        // TODO: this product needs to be gotten from the intent, not created here
-        Product product = new Product("this doesnt take real data right now");
         ProductAdapter adapter = new ProductAdapter(this, R.layout.product_row, product.getProductInfos());
         
         //String[] testArray = {"troy", "Dillon", "Shane", "Raj"};
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testArray);
         
-        final ListView listView = (ListView) findViewById(R.id.itemsListView);
+        listView = (ListView) findViewById(R.id.itemsListView);
         listView.setAdapter(adapter);
         
-        listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO change from toast to change activity
-				Intent intent = new Intent(ProductPage.this, StorePage.class);
-				intent.putExtra(EXTRA_MESSAGE, listView.getItemAtPosition(arg2).toString());
-				startActivity(intent);
-				
-				Toast.makeText(getBaseContext(), listView.getItemAtPosition(arg2).toString(), 1000).show();
-			} 
-        });
+        listView.setOnItemClickListener(listviewItemClickListener);
     }
+    
+    /**
+     * The Listener for when an item is clicked. Currently a dummy function that passes 
+     * it onto the store page. 
+     */
+    private OnItemClickListener listviewItemClickListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			// TODO change from toast to change activity
+			Intent intent = new Intent(ProductPage.this, StorePage.class);
+			intent.putExtra(EXTRA_MESSAGE, listView.getItemAtPosition(arg2).toString());
+			startActivity(intent);
+			
+			Toast.makeText(getBaseContext(), listView.getItemAtPosition(arg2).toString(), 1000).show();
+		} 
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

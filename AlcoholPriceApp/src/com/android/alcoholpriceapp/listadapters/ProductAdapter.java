@@ -19,6 +19,17 @@ public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 	int layoutResourceId;
 	ArrayList<ProductInfo> data = null;
 	
+	/**
+	 * Constructor for the adapter. Takes the context, layout to use for each row,
+	 * and an array list of data to put into the rows
+	 * 
+	 * @param context
+	 * 			The context that the list view will be in
+	 * @param layoutResourceId
+	 * 			The layout to apply to each row
+	 * @param data
+	 * 			A list of data to fill the rows with
+	 */
 	public ProductAdapter(Context context, int layoutResourceId, ArrayList<ProductInfo> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
@@ -26,6 +37,12 @@ public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 		this.data = data;
 	}
 	
+	/**
+	 * pretty sure this is called when each row is created in the listView
+	 * 
+	 * The inflator takes the layout assigned to it and makes it fit the
+	 * space that it is filling (im pretty sure)
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
@@ -53,8 +70,10 @@ public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 		return row;
 	}
 	
-	//ProductHolder is used to hold the textview objects
-	//so that we do not have to find them each time
+	/**
+	 * ProductHolder is a class used to hold the design elements for each row
+	 * Using this is supposed to increase performance (can't tell how it does)
+	 */
 	static class ProductHolder {
 		TextView priceText;
 		TextView storeText;

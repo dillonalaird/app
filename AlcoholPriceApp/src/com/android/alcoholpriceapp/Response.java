@@ -1,5 +1,6 @@
 package com.android.alcoholpriceapp;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,11 +12,11 @@ import org.json.JSONObject;
  */
 public class Response {
 	/** The data contained in the JSON response. */
-	private String data;
+	private JSONArray data;
 	/** The status of the response, basically whether or not it contained any
 	 * data.
 	 */
-	private boolean status;
+	private boolean success;
 	
 	/**
 	 * Constructs a Response object that checks the status of the JSON String
@@ -28,39 +29,37 @@ public class Response {
 		try {
 			JSONObject dataObj = new JSONObject(jsonStr);
 			String status = dataObj.getJSONObject("result").getString("status");
-			data   = dataObj.getString("data");
+			data = dataObj.getJSONArray("data");
 			
-			if (status.equals("400"))
-				this.status = false;
+			if (status.equals("200"))
+				this.success = true;
 			else
-				this.status = true;
+				this.success = false;
 		} catch (JSONException e) {
 			// This will throw an exception if there's something wrong with the 
 			// format of the JSON String. I changed status to false for now so
 			// that the string isn't sent into Product which would probably
 			// throw the same exception again.
-			this.status = false;
+			this.success = false;
+			
+			// TODO: somehow log what the string was so that we can see what it was
 		}
 	}
 	
 	/**
-	 * Returns the status of the JSON String response indicating whether or not
-	 * the String contains any data.
-	 * 
-	 * @return the status of the JSON String response.
+	 * @return whether or not the response was a 200(success).
 	 */
-	public boolean getStatus() {
-		return status;
+	public boolean getSuccess() {
+		return success;
 	}
 	
 	/**
-	 * Returns the data contained in the JSON String response. Note you should
-	 * check getStatus before you call this method to make sure there's actual
-	 * data. 
+	 * Returns the data JSON Array of the response. Now the JSON string parsing does
+	 * not need to happen anywhere else
 	 * 
-	 * @return the data contained in the JSON String response.
+	 * @return the data of the response
 	 */
-	public String getData() {
+	public JSONArray getData() {
 		return data;
 	}
 }

@@ -18,7 +18,7 @@ import android.os.Parcelable;
  * $9.99 at Safeway 1.2 miles away and $10.99 at QFC 1.0 miles away.
  */
 public class Product implements Parcelable {
-	private int mData;
+	/** Current location of the phone */
 	private Location location;
 	/** Product name of this alcohol. */
 	private String productName;
@@ -26,30 +26,56 @@ public class Product implements Parcelable {
 	private String size;
 	/** The list of ProductInfo's for the given product. */
 	private ArrayList<ProductInfo> productInfos;
-	// Test string
-	String jsonStr = "{\"result\":{\"status\":200,\"message\":\"OK\"},\"data\":[{\"storeID\":2,\"store_name\":\"safeway\",\"store_gps\":\"still dont know\",\"price\":3.99},{\"storeID\":1,\"store_name\":\"Hammy\",\"store_gps\":\"don't know\",\"price\":4.99}]}";
-
+	
 	/**
-	 * Takes a JSON string and parses its data field turning it into an array
-	 * of ProducInfo's. Note any exception thrown here is caught and not 
-	 * thrown again. It's assumed that the JSON string is correctly formated.
+	 * Takes a JSON array of the product info for this product, and will turn it
+	 * into the proper array list. Also takes the name and size of the product,
+	 * as well as the current location.
 	 * 
-	 * @param jsonStr
-	 * 			The JSON string being parsed for it's data field.
+	 * @param productInfo
+	 *				JSON array containing product info (parsed by response)
+	 * @param productName
+	 * 				name of the alcohol
+	 * @param size        
+	 * 				size of the alcohol
+	 * @param location    
+	 * 				current location of the phone
 	 */
-	public Product(String jsonStr, String productName, String size, Location location) {
+	public Product(JSONArray productInfo, String productName, String size, Location location) {
 		this.location = location;
 		productInfos = new ArrayList<ProductInfo>();
 		this.productName = productName;
 		this.size = size;
 		
 		try {
-			parseData(new JSONObject(jsonStr));
+			parseData(productInfo);
 		} catch (JSONException e) {
-			// This should already be checked by Response. The only other reason
-			// an exception would be thrown is if one of the fields was named 
-			// incorrectly and parseData couldn't find it.
+			// Response now handles the parse error
+			// TODO: if data is in incorrect format it can throw an error...
 		}
+	}
+	
+	/**
+	 * Default constructor. Used in constructor taking parcel to create the
+	 * array list
+	 */
+	public Product() {
+		productInfos = new ArrayList<ProductInfo>();
+	}
+	
+	/**
+	 * Constructor taking in a parcel. The order that data is put into the parcel
+	 * is the order that data needs to be taken back out
+	 * 
+	 * @param in - the parcel to create the object from
+	 */
+	private Product(Parcel in) {
+		this();
+		
+		in.readTypedList(productInfos, ProductInfo.CREATOR);
+		productName = in.readString();
+		size = in.readString();
+		location = in.readParcelable(null);
 	}
 	
 	/**
@@ -62,10 +88,9 @@ public class Product implements Parcelable {
 	 * @throws JSONException
 	 * 			If it can't find the data field, or any of data's fields.
 	 */
-	private void parseData(JSONObject dataObj) throws JSONException {
-		JSONArray data = dataObj.getJSONArray("data");
-		for (int i = 0; i < data.length(); i++) {
-			JSONObject dataField = data.getJSONObject(i);
+	private void parseData(JSONArray dataObj) throws JSONException {
+		for (int i = 0; i < dataObj.length(); i++) {
+			JSONObject dataField = dataObj.getJSONObject(i);
 			int storeID = Integer.parseInt(dataField.getString("storeID"));
 			String storeName = dataField.getString("store_name");
 			double price = Double.parseDouble(dataField.getString("price"));
@@ -138,13 +163,23 @@ public class Product implements Parcelable {
 		return 0;
 	}
 	
+	/**
+	 * Creates the parcel when called. The order data is put into the parcel
+	 * is the order that data must be pulled back out
+	 */
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeInt(mData);
+		//we just need to write each field into
+		//the parcel
+		
+		out.writeTypedList(productInfos);
+		out.writeString(productName);
+		out.writeString(size);
+		out.writeParcelable(location, 0);
 	}
 	
-	public static final Parcelable.Creator<Product> CREATOR 
-			= new Parcelable.Creator<Product>() {
+	public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
 		public Product createFromParcel(Parcel in) {
+			//we just need to read each field back from the parcel
 			return new Product(in);
 		}
 		
@@ -154,10 +189,6 @@ public class Product implements Parcelable {
 		
 	};
 	
-	private Product(Parcel in) {
-		mData = in.readInt();
-	}
-	
 	/**
 	 *  productInfos getter 
 	 */
@@ -165,13 +196,3 @@ public class Product implements Parcelable {
 		return productInfos;
 	}
 }
-
-
-
-
-
-
-
-
-
-
