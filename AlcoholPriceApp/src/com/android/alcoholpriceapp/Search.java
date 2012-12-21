@@ -148,6 +148,7 @@ public class Search extends Activity {
 			data = searchTask.execute(alcohol, size).get();
 		} catch (Exception e) {
 			// not network error, this is an exception thrown by AsyncTask's execute method
+			// TODO: AsyncTask execute exception
 		} 
 
     	progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -172,6 +173,13 @@ public class Search extends Activity {
     	}
     }
     
+    /**
+     * Gets the current GPS location. If the user doesn't have GPS enabled pops
+     * up an alert dialog allowing the user to access settings and enable GPS.
+     * If GPS still isn't enabled, pops up an alert dialog displaying an error.
+     * 
+     * @return the current GPS location of the user.
+     */
     private Location getLocation() {
     	GPSTracker gps = new GPSTracker(this);
     	if (!gps.canGetLocation()) // if gps isn't enabled
@@ -183,7 +191,7 @@ public class Search extends Activity {
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
     		builder
     			.setTitle("Error")
-    			.setMessage("Please enable GPS")
+    			.setMessage("No GPS enabled")
     			.setPositiveButton("Okay", null)
     			.show();
     		return null;

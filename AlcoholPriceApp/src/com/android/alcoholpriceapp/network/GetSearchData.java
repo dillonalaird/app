@@ -34,6 +34,7 @@ public class GetSearchData extends AsyncTask<String, Integer, String> {
 			data = sb.toString();
 		} catch(Exception e) {
 			e.printStackTrace();
+			// TODO: add some sort of network error dialog box
 		} finally {
 			if(in != null) {
 				try {
