@@ -62,7 +62,7 @@ public class Product implements Parcelable {
 	 * Default constructor. Used in constructor taking parcel to create the
 	 * array list
 	 */
-	public Product() {
+	private Product() {
 		productInfos = new ArrayList<PriceInfo>();
 	}
 	
