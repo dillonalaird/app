@@ -6,9 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.alcoholpriceapp.gps.GPSTracker;
+
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Product represents an alcohol product. It takes in a JSON string and grab 
@@ -94,52 +97,16 @@ public class Product implements Parcelable {
 			int storeID = Integer.parseInt(dataField.getString("storeID"));
 			String storeName = dataField.getString("store_name");
 			double price = Double.parseDouble(dataField.getString("price"));
-			double dist = calculateGPSDistance(dataField.getString("store_gps"));
+			
+			String[] coordinates = dataField.getString("store_gps").split(",");
+			double dist = GPSTracker.calculateGPSDistance(
+					Double.parseDouble(coordinates[0]), 
+					Double.parseDouble(coordinates[1]), 
+					location.getLatitude(), 
+					location.getLongitude());
 			
 			productInfos.add(new PriceInfo(storeID, storeName, price, dist));
 		}
-	}
-	
-	/**
-	 * Calculates the distance between GPSCoord and the users current GPS
-	 * coordinates.
-	 * 
-	 * @param GPSCoord
-	 * 			GPS coordinates. Assumes that GPSCoord follows the following
-	 * format "latitude, longitude"
-	 * @return the distance between GPSCoord and the users current GPS coordinates.
-	 */
-	private double calculateGPSDistance(String GPSCoord) {
-		double lat1 = location.getLatitude();
-		double long1 = location.getLongitude();
-		String[] coordinates = GPSCoord.split(",");
-		double lat2 = Double.parseDouble(coordinates[0]);
-		double long2 = Double.parseDouble(coordinates[1]);
-		
-		// Check http://www.smokycogs.com/blog/finding-the-distance-between-two-gps-coordinates/
-		// for details.
-		lat1 = degToRad(lat1);
-		long1 = degToRad(long1);
-		lat2 = degToRad(lat2);
-		long2 = degToRad(long2);
-		
-		double earthRadius = 6371; // km
-		double deltaLat = lat2 - lat1;
-		double deltaLong = long2 - long1;
-		double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0) + 
-				Math.cos(lat1) * Math.cos(lat2) *
-				Math.sin(deltaLong / 2.0) * Math.sin(deltaLong / 2.0);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double distance = earthRadius * c;
-		return distance;
-	}
-	
-	private double radToDeg(double radians) {
-		return radians * (180 / Math.PI);
-	}
-	
-	private double degToRad(double degrees) {
-		return degrees * (Math.PI / 180);
 	}
 	
 	/*

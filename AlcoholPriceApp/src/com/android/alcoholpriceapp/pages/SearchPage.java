@@ -26,10 +26,6 @@ import android.widget.Toast;
 
 import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.R.array;
-import com.android.alcoholpriceapp.R.id;
-import com.android.alcoholpriceapp.R.layout;
-import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Product;
@@ -127,7 +123,9 @@ public class SearchPage extends Activity {
 				Response res = null;
 				final APICall searchTask = new APICall();
 				try {
-			    	res = searchTask.execute("GET", "PRODUCT", alcohol.toLowerCase().trim(), selectedSize).get();
+			    	res = searchTask.execute("GET", "PRODUCT", 
+			    			alcohol.toLowerCase().trim(), 
+			    			selectedSize).get();
 				} catch (Exception e) {
 					// not network error, this is an exception thrown by AsyncTask's execute method
 					// TODO: AsyncTask execute exception
@@ -146,7 +144,9 @@ public class SearchPage extends Activity {
 					Log.v("debug", "4");
 		    		Location location = getLocation();
 		    		if (location != null) {
-			    		Parcelable product = new Product(res.getData(), alcohol.toLowerCase(Locale.ENGLISH).trim(), selectedSize, location);
+			    		Parcelable product = new Product(res.getData(), 
+			    				alcohol.toLowerCase(Locale.ENGLISH).trim(), 
+			    				selectedSize, location);
 			    		
 			    		Intent intent = new Intent(SearchPage.this, ProductPage.class);
 			    		intent.putExtra("Product", product);
@@ -154,7 +154,13 @@ public class SearchPage extends Activity {
 			    		progressDialog.cancel(); //so when you hit back it isnt there
 			    		startActivity(intent);
 		    		} else {
-		    			// TODO: if location comes back null? 
+		    			AlertDialog.Builder builder = new AlertDialog.Builder(SearchPage.this);
+			    		builder
+			    			.setTitle("Sorry!")
+			    			.setMessage("No fucking idea.")
+			    			.setPositiveButton("Okay", null)
+			    			.show();
+			    		progressDialog.cancel();
 		    		}
 		    	} else {
 		    		AlertDialog.Builder builder = new AlertDialog.Builder(SearchPage.this);
@@ -163,6 +169,7 @@ public class SearchPage extends Activity {
 		    			.setMessage("We could not find that alcohol in our database.")
 		    			.setPositiveButton("Okay", null)
 		    			.show();
+		    		progressDialog.cancel();
 		    	}
 			} //no else needed because check input makes the toasts
 		}

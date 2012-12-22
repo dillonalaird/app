@@ -17,6 +17,10 @@ import android.util.Log;
  * Credit to http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
  */
 public class GPSTracker extends Service implements LocationListener {
+	/** Miles per meter. */
+	// This is a float since Location.distanceTo returns a float
+	private final static float MILES_PER_METER = 0.000621371f;
+	
 	 private final Context mContext;
 	 
 	    // flag for GPS status
@@ -178,6 +182,42 @@ public class GPSTracker extends Service implements LocationListener {
 	 
 	        // Showing Alert Message
 	        alertDialog.show();
+	    }
+	    
+	    /**
+	     * Calculates the distance between two latitude, longitude coordinates and
+	     * returns the result in miles rounded to one digit after the decimal place.
+	     * 
+	     * @param lat1
+	     * 			Latitude of first coordinate.
+	     * @param long1
+	     * 			Longitude of first coordinate.
+	     * @param lat2
+	     * 			Latitude of second coordinate.
+	     * @param long2
+	     * 			Longitude of second coordinate.
+	     * @return the distance in miles between the two latitude longitude points.
+	     */
+	    public static double calculateGPSDistance(double lat1, double long1, double lat2, double long2) {
+	    	float[] results = new float[1];
+	    	Location.distanceBetween(lat1, long1, lat2, long2, results);
+	    	return round((double) (results[0] * MILES_PER_METER), 1);
+	    }
+	    
+	    /**
+	     * Rounds double to a specified number of places after the decimal.
+	     * 
+	     * @param value
+	     * 			Value being rounded.
+	     * @param places
+	     * 			Places after the decimal to round to.
+	     * @return value rounded to the specified number of places after the decimal.
+	     */
+	    private static double round(double value, int places) {
+	    	long factor = (long) Math.pow(10, places);
+	    	value = value * factor;
+	    	long tmp = Math.round(value);
+	    	return (double) tmp / factor;
 	    }
 	 
 	    @Override
