@@ -10,7 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.os.AsyncTask;
 
 
-public class GetSearchData extends AsyncTask<String, Integer, Response> {
+public class APICall extends AsyncTask<String, Integer, Response> {
 
 	/**
 	 * called when you call execute()

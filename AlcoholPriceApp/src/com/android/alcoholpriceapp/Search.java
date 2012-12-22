@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
-import com.android.alcoholpriceapp.network.GetSearchData;
+import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 
 /**
@@ -118,7 +118,7 @@ public class Search extends Activity {
 		    	
 		    	//create a response object
 				Response res = null;
-				final GetSearchData searchTask = new GetSearchData();
+				final APICall searchTask = new APICall();
 				try {
 			    	res = searchTask.execute("GET", "PRODUCT", alcohol.toLowerCase().trim(), selectedSize).get();
 				} catch (Exception e) {
