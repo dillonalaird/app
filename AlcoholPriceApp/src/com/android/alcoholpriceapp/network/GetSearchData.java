@@ -8,18 +8,54 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
-public class GetSearchData extends AsyncTask<String, Integer, String> {
 
-	//first argument is the name
-	//second argument is the size
+public class GetSearchData extends AsyncTask<String, Integer, Response> {
+
+	/**
+	 * called when you call execute()
+	 * 
+	 * @param params
+	 * 			[0] - the type of request (GET, POST, PUT, DELETE)
+	 * 			[1] - the model to do request on (product)
+	 * 		  other - explained above call to each function below
+	 */
 	@Override
-	protected String doInBackground(String... params) {
+	protected Response doInBackground(String... params) {
+		String rawResponse = null;
+		
+		if (params[0] == "GET") {
+			if(params[1] == "PRODUCT") {
+				/** [1] - name of alcohol [2] - size of alcohol */
+				rawResponse = getProduct(params[2], params[3]);
+			}
+		} else if (params[0] == "POST") {
+			/* not yet implemented
+			 * POST requests are for changing data
+			 */
+		} else if (params[0] == "PUT") {
+			/*
+			 * not yet implemented
+			 * PUT requests are for adding to the database
+			 */
+		} else if (params[0] == "DELETE") {
+			/*
+			 * not yet implemented
+			 * DELETE requests are for deleting(no surprise) from the database
+			 */
+		} else {
+			//improper request type
+		}
+		
+		Response res = new Response(rawResponse);
+		return res;
+	}
+	
+	private String getProduct(	String name, String size) {
 		BufferedReader in = null;
 		String data = null;
 		
-		HttpGet request = new HttpGet("http://easyuniv.com/API/alc/" + params[0] + "/" + params[1]);
+		HttpGet request = new HttpGet("http://easyuniv.com/API/product/" + name + "/" + size);
 		DefaultHttpClient client = new DefaultHttpClient();
 		try {
 			HttpResponse response = client.execute(request);

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.network.GetSearchData;
+import com.android.alcoholpriceapp.network.Response;
 
 /**
  * The search page for the Alcohol Price Application. Allows the user to search
@@ -111,20 +112,39 @@ public class Search extends Activity {
 		public void onClick(View v) {
 			String alcohol = searchEditText.getText().toString();
 			if (checkInput(alcohol, selectedSize)) {
-				//perform HTTP request
-				String data = performSearch(alcohol.toLowerCase().trim(), selectedSize);
+				Log.v("debug", "1");
+				progressDialog = ProgressDialog.show(Search.this, "Please wait...",
+		    			"Retrieving data...", true, true);
 		    	
 		    	//create a response object
-		    	Response res = new Response(data);
+				Response res = null;
+				final GetSearchData searchTask = new GetSearchData();
+				try {
+			    	res = searchTask.execute("GET", "PRODUCT", alcohol.toLowerCase().trim(), selectedSize).get();
+				} catch (Exception e) {
+					// not network error, this is an exception thrown by AsyncTask's execute method
+					// TODO: AsyncTask execute exception
+				} 
+				Log.v("debug", "2");
+				
+				progressDialog.setOnCancelListener(new OnCancelListener() {
+		    		@Override
+		    		public void onCancel(DialogInterface dialog) {
+		    			if (searchTask != null) searchTask.cancel(true);
+		    		}
+		    	});
+				Log.v("debug", "3");
+		    	
 		    	if (res.getSuccess()) {
+					Log.v("debug", "4");
 		    		Location location = getLocation();
 		    		if (location != null) {
-			    		// Check http://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents/2141166#2141166
-			    		// for how to retrieve Parcelable object.
 			    		Parcelable product = new Product(res.getData(), alcohol.toLowerCase(Locale.ENGLISH).trim(), selectedSize, location);
 			    		
 			    		Intent intent = new Intent(Search.this, ProductPage.class);
 			    		intent.putExtra("Product", product);
+						Log.v("debug", "5");
+			    		progressDialog.cancel(); //so when you hit back it isnt there
 			    		startActivity(intent);
 		    		} else {
 		    			// TODO: if location comes back null? 
@@ -161,39 +181,6 @@ public class Search extends Activity {
 		}
 		return true;
 	}
-    
-    /**
-     * Performs the search when the search button is clicked. Pops up a progress
-     * dialog that can be canceled using the back button.
-     * 
-     * @param alcohol
-     * 			The alcohol product name the user is trying to search for.
-     * @param size
-     * 			The size of the alcohol the user is trying to search for.
-     */
-	private String performSearch(String alcohol, String size) {
-    	progressDialog = ProgressDialog.show(Search.this, "Please wait...",
-    			"Retrieving data...", true, true);
-
-    	String data = null;
-    	final GetSearchData searchTask = new GetSearchData();
-
-    	progressDialog.setOnCancelListener(new OnCancelListener() {
-    		@Override
-    		public void onCancel(DialogInterface dialog) {
-    			if (searchTask != null) searchTask.cancel(true);
-    		}
-    	});
-    	
-    	try {
-			data = searchTask.execute(alcohol, size).get();
-		} catch (Exception e) {
-			// not network error, this is an exception thrown by AsyncTask's execute method
-			// TODO: AsyncTask execute exception
-		} 
-    	progressDialog.cancel();
-		return data;
-    }
     
     /**
      * Gets the current GPS location. If the user doesn't have GPS enabled pops
