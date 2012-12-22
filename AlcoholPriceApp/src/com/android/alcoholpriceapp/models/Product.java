@@ -25,7 +25,7 @@ public class Product implements Parcelable {
 	/** Size of this alcohol. */
 	private String size;
 	/** The list of ProductInfo's for the given product. */
-	private ArrayList<ProductInfo> productInfos;
+	private ArrayList<PriceInfo> productInfos;
 	
 	/**
 	 * Takes a JSON array of the product info for this product, and will turn it
@@ -43,7 +43,7 @@ public class Product implements Parcelable {
 	 */
 	public Product(JSONArray productInfo, String productName, String size, Location location) {
 		this.location = location;
-		productInfos = new ArrayList<ProductInfo>();
+		productInfos = new ArrayList<PriceInfo>();
 		this.productName = productName;
 		this.size = size;
 		
@@ -60,7 +60,7 @@ public class Product implements Parcelable {
 	 * array list
 	 */
 	public Product() {
-		productInfos = new ArrayList<ProductInfo>();
+		productInfos = new ArrayList<PriceInfo>();
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class Product implements Parcelable {
 	private Product(Parcel in) {
 		this();
 		
-		in.readTypedList(productInfos, ProductInfo.CREATOR);
+		in.readTypedList(productInfos, PriceInfo.CREATOR);
 		productName = in.readString();
 		size = in.readString();
 		location = in.readParcelable(null);
@@ -96,7 +96,7 @@ public class Product implements Parcelable {
 			double price = Double.parseDouble(dataField.getString("price"));
 			double dist = calculateGPSDistance(dataField.getString("store_gps"));
 			
-			productInfos.add(new ProductInfo(storeID, storeName, price, dist));
+			productInfos.add(new PriceInfo(storeID, storeName, price, dist));
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class Product implements Parcelable {
 	/**
 	 *  productInfos getter 
 	 */
-	public ArrayList<ProductInfo> getProductInfos() {
+	public ArrayList<PriceInfo> getProductInfos() {
 		return productInfos;
 	}
 }

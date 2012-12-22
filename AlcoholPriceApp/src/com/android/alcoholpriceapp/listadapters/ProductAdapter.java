@@ -11,13 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.models.ProductInfo;
+import com.android.alcoholpriceapp.models.PriceInfo;
 
-public class ProductAdapter extends ArrayAdapter<ProductInfo> {
+public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 
 	Context context;
 	int layoutResourceId;
-	ArrayList<ProductInfo> data = null;
+	ArrayList<PriceInfo> data = null;
 	
 	/**
 	 * Constructor for the adapter. Takes the context, layout to use for each row,
@@ -30,7 +30,7 @@ public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 	 * @param data
 	 * 			A list of data to fill the rows with
 	 */
-	public ProductAdapter(Context context, int layoutResourceId, ArrayList<ProductInfo> data) {
+	public ProductAdapter(Context context, int layoutResourceId, ArrayList<PriceInfo> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
@@ -62,7 +62,7 @@ public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 			holder = (ProductHolder)row.getTag();
 		}
 		
-		ProductInfo product = data.get(position);
+		PriceInfo product = data.get(position);
 		holder.distanceText.setText(Double.toString(product.getDist()) + " away");
 		holder.priceText.setText("$" + Double.toString(product.getPrice()));
 		holder.storeText.setText(product.getStoreName());
