@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
         
         <activity 
-            android:name=".Search">
+            android:name="com.android.alcoholpriceapp.SearchPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,7 +22,7 @@
         </activity>
         
         <activity 
-            android:name=".Browse">
+            android:name="com.android.alcoholpriceapp.BrowsePage">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -38,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".ProductPage">
+            android:name="com.android.alcoholpriceapp.pages.ProductPage">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -1,4 +1,4 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.pages;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.alcoholpriceapp.R;
+import com.android.alcoholpriceapp.R.id;
+import com.android.alcoholpriceapp.R.layout;
+import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
+import com.android.alcoholpriceapp.models.Product;
 
 /**
  * Product page is the activity that shows different prices for the particular alcohol/size

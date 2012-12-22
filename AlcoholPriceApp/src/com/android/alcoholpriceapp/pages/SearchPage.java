@@ -1,4 +1,4 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.pages;
 
 import java.util.Locale;
 
@@ -24,8 +24,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
+import com.android.alcoholpriceapp.R;
+import com.android.alcoholpriceapp.R.array;
+import com.android.alcoholpriceapp.R.id;
+import com.android.alcoholpriceapp.R.layout;
+import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
+import com.android.alcoholpriceapp.models.Product;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 
@@ -33,7 +40,7 @@ import com.android.alcoholpriceapp.network.Response;
  * The search page for the Alcohol Price Application. Allows the user to search
  * alcohol by product name and size.
  */
-public class Search extends Activity {
+public class SearchPage extends Activity {
 
 	/** Text area for user to enter product name query. */
 	private EditText searchEditText;
@@ -113,7 +120,7 @@ public class Search extends Activity {
 			String alcohol = searchEditText.getText().toString();
 			if (checkInput(alcohol, selectedSize)) {
 				Log.v("debug", "1");
-				progressDialog = ProgressDialog.show(Search.this, "Please wait...",
+				progressDialog = ProgressDialog.show(SearchPage.this, "Please wait...",
 		    			"Retrieving data...", true, true);
 		    	
 		    	//create a response object
@@ -141,7 +148,7 @@ public class Search extends Activity {
 		    		if (location != null) {
 			    		Parcelable product = new Product(res.getData(), alcohol.toLowerCase(Locale.ENGLISH).trim(), selectedSize, location);
 			    		
-			    		Intent intent = new Intent(Search.this, ProductPage.class);
+			    		Intent intent = new Intent(SearchPage.this, ProductPage.class);
 			    		intent.putExtra("Product", product);
 						Log.v("debug", "5");
 			    		progressDialog.cancel(); //so when you hit back it isnt there
@@ -150,7 +157,7 @@ public class Search extends Activity {
 		    			// TODO: if location comes back null? 
 		    		}
 		    	} else {
-		    		AlertDialog.Builder builder = new AlertDialog.Builder(Search.this);
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(SearchPage.this);
 		    		builder
 		    			.setTitle("Sorry!")
 		    			.setMessage("We could not find that alcohol in our database.")

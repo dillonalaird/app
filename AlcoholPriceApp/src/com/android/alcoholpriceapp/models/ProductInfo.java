@@ -1,4 +1,4 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

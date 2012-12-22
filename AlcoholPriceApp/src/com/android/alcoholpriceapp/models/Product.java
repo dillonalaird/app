@@ -1,4 +1,4 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.models;
 
 import java.util.ArrayList;
 

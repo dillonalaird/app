@@ -1,4 +1,4 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.pages;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,13 +10,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
+import com.android.alcoholpriceapp.R;
+import com.android.alcoholpriceapp.R.array;
+import com.android.alcoholpriceapp.R.id;
+import com.android.alcoholpriceapp.R.layout;
+import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.menu.MenuControl;
 
 /**
  * The browse page for the Alcohol Price Application. Allows the user to browse
  * alcohols by type and size.
  */
-public class Browse extends Activity {
+public class BrowsePage extends Activity {
 
 	/** The spinner containing all of the alcohol size information. */
 	private Spinner sizeSpinner;

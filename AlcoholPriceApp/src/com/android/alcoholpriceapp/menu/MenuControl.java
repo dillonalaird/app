@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.view.MenuItem;
 
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.Search;
-import com.android.alcoholpriceapp.Browse;
+import com.android.alcoholpriceapp.pages.BrowsePage;
+import com.android.alcoholpriceapp.pages.SearchPage;
 
 /**
  * This is a basic controller that takes selected menu items and launches their
@@ -27,10 +27,10 @@ public class MenuControl {
 	public static boolean selectMenuItem(MenuItem item, Activity current) {
     	switch (item.getItemId()) {
 			case R.id.search:
-				launchActivity(current, Search.class);
+				launchActivity(current, SearchPage.class);
 				return true;
 			case R.id.browse:
-				launchActivity(current, Browse.class);
+				launchActivity(current, BrowsePage.class);
 				return true;
 			default:
 				return current.onOptionsItemSelected(item);

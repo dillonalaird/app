@@ -1,5 +1,8 @@
-package com.android.alcoholpriceapp;
+package com.android.alcoholpriceapp.pages;
 
+import com.android.alcoholpriceapp.R;
+import com.android.alcoholpriceapp.R.layout;
+import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.menu.MenuControl;
 
 import android.app.Activity;

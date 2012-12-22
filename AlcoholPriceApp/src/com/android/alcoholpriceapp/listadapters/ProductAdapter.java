@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.android.alcoholpriceapp.ProductInfo;
 import com.android.alcoholpriceapp.R;
+import com.android.alcoholpriceapp.models.ProductInfo;
 
 public class ProductAdapter extends ArrayAdapter<ProductInfo> {
 
