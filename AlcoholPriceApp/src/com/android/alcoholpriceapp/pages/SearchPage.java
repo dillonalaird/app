@@ -76,7 +76,7 @@ public class SearchPage extends Activity {
 		findAllViewsById();
 		initSpinner();
 		// This is so we can grab the item currently selected in the spinner
-		sizeSpinner.setOnItemSelectedListener(new SpinnerActivity());
+		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
 		
 		searchButton.setOnClickListener(onSearchClickListener);
 	}
@@ -178,7 +178,8 @@ public class SearchPage extends Activity {
 	
 	/**
 	 * Checks the input to make sure the user has actually put in the product name
-	 * and size data.
+	 * and size data. 
+	 * 
 	 * @param alcohol
 	 * 			The alcohol product name the user is trying to search for.
 	 * @param size
@@ -186,6 +187,7 @@ public class SearchPage extends Activity {
 	 * @return
 	 */
 	private boolean checkInput(String alcohol, String size) {
+		
 		if (alcohol == null) {
 			Toast.makeText(this, "Please type in an alcohol product name", Toast.LENGTH_SHORT).show();
 			return false;
@@ -222,10 +224,10 @@ public class SearchPage extends Activity {
     }
     
     /**
-     * SpinnerActivity allows us to set selectedSize to the current item selected
+     * SizeSpinnerActivity allows us to set selectedSize to the current item selected
      * on the sizeSpinner.
      */
-    public class SpinnerActivity extends Activity implements OnItemSelectedListener {
+    private class SizeSpinnerActivity extends Activity implements OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,
     			int pos, long id) {
     		
@@ -233,23 +235,23 @@ public class SearchPage extends Activity {
     		// can parse them easier
     		String size = parent.getItemAtPosition(pos).toString();
     		if (size.equals("Single"))
-    			size = "0";
-    		else if (size.equals("40 oz"))
     			size = "1";
-    		else if (size.equals("6 pack"))
+    		else if (size.equals("40 oz"))
     			size = "2";
-    		else if (size.equals("12 pack"))
+    		else if (size.equals("6 pack"))
     			size = "3";
-    		else if (size.equals("18 pack"))
+    		else if (size.equals("12 pack"))
     			size = "4";
-    		else if (size.equals("24 pack"))
+    		else if (size.equals("18 pack"))
     			size = "5";
-    		else if (size.equals("16 oz (pint)"))
+    		else if (size.equals("24 pack"))
     			size = "6";
-    		else if (size.equals("750mL (fifth)"))
+    		else if (size.equals("16 oz (pint)"))
     			size = "7";
-    		else // if (size.equals("1.5L (half gallon)"))
+    		else if (size.equals("750mL (fifth)"))
     			size = "8";
+    		else // if (size.equals("1.5L (half gallon)"))
+    			size = "9";
     		selectedSize = size;
     	}
     	

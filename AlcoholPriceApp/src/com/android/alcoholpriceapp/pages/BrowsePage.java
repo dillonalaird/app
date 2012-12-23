@@ -1,21 +1,23 @@
 package com.android.alcoholpriceapp.pages;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.R.array;
-import com.android.alcoholpriceapp.R.id;
-import com.android.alcoholpriceapp.R.layout;
-import com.android.alcoholpriceapp.R.menu;
+import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
 
 /**
@@ -30,6 +32,8 @@ public class BrowsePage extends Activity {
 	private Spinner alcoholTypeSpinner;
 	/** Browse button that initiates the browse process. */
 	private Button browseButton;
+	private String selectedSize;
+	private String selectedType;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,9 @@ public class BrowsePage extends Activity {
 		});
 	}
 
+	/**
+	 * Creates the options menu to display on this activity.
+	 */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -91,5 +98,94 @@ public class BrowsePage extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	return MenuControl.selectMenuItem(item, this);
+    }
+    
+	/**
+	 * Checks the input to make sure the user has actually put in the product name
+	 * and size data.
+	 * @param alcohol
+	 * 			The alcohol product name the user is trying to search for.
+	 * @param size
+	 * 			The size of the alcohol the user is trying to search for.
+	 * @return
+	 */
+	private boolean checkInput(String type, String size) {
+		if (type == null) {
+			Toast.makeText(this, "Please select an alcohol type", Toast.LENGTH_SHORT).show();
+			return false;
+		} else if (size.equals("Select Size of Alcohol")) {
+			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+	}
+	
+    /**
+     * Gets the current GPS location. If the user doesn't have GPS enabled pops
+     * up an alert dialog allowing the user to access settings and enable GPS.
+     * If GPS still isn't enabled, pops up an alert dialog displaying an error.
+     * 
+     * @return the current GPS location of the user.
+     */
+    private Location getLocation() {
+    	GPSTracker gps = new GPSTracker(this);
+    	if (!gps.canGetLocation()) // if gps isn't enabled
+    		gps.showSettingsAlert();
+    	
+    	if (gps.canGetLocation())
+    		return gps.getLocation();
+    	else {
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder
+    			.setTitle("Error")
+    			.setMessage("No GPS enabled")
+    			.setPositiveButton("Okay", null)
+    			.show();
+    		return null;
+    	}
+    }
+    
+    private class SizeSpinnerActivity extends Activity implements OnItemSelectedListener {
+    	public void onItemSelected(AdapterView<?> parent, View view,
+    			int pos, long id) {
+    		
+    		// Converts the sizes to String representations of ints so the database
+    		// can parse them easier
+    		String size = parent.getItemAtPosition(pos).toString();
+    		if (size.equals("Single"))
+    			size = "1";
+    		else if (size.equals("40 oz"))
+    			size = "2";
+    		else if (size.equals("6 pack"))
+    			size = "3";
+    		else if (size.equals("12 pack"))
+    			size = "4";
+    		else if (size.equals("18 pack"))
+    			size = "5";
+    		else if (size.equals("24 pack"))
+    			size = "6";
+    		else if (size.equals("16 oz (pint)"))
+    			size = "7";
+    		else if (size.equals("750mL (fifth)"))
+    			size = "8";
+    		else // if (size.equals("1.5L (half gallon)"))
+    			size = "9";
+    		selectedSize = size;
+    	}
+    	
+    	public void onNothingSelected(AdapterView<?> parent) {
+    		
+    	}
+    }
+    
+    private class TypeSpinnerActivity extends Activity implements OnItemSelectedListener {
+    	public void onItemSelected(AdapterView<?> parent, View view,
+    			int pos, long id) {
+    		
+    	}
+    	
+    	public void onNothingSelected(AdapterView<?> parent) {
+    		
+    	}
     }
 }

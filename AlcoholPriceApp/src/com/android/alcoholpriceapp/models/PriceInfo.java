@@ -58,7 +58,7 @@ public class PriceInfo implements Parcelable {
 	}
 
 	/**
-	 * Constuctor used to create an object from a parcel. The order that
+	 * Constructor used to create an object from a parcel. The order that
 	 * data is put into a parcel is the order that it must be taken out.
 	 * 
 	 * @param in
@@ -122,8 +122,8 @@ public class PriceInfo implements Parcelable {
 			return 7;
 		else if (size.equals("750mL (fifth)"))
 			return 8;
-		else // doesn't match
-			return -1;
+		else // if (size.equals("1.5L (half gallon)"))
+			return 9;
 	}
 	
 	public String convertSize(int size) {
@@ -144,6 +144,8 @@ public class PriceInfo implements Parcelable {
 				return "16 oz (pint)";
 			case 8:
 				return "750mL (fifth)";
+			case 9:
+				return "1.5L (half gallon)";
 			default:
 				return null;
 		}

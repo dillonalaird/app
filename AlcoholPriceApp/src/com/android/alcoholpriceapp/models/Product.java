@@ -1,12 +1,15 @@
 package com.android.alcoholpriceapp.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.alcoholpriceapp.gps.GPSTracker;
+import com.android.alcoholpriceapp.util.PriceInfoDistanceComparator;
 
 import android.location.Location;
 import android.os.Parcel;
@@ -28,7 +31,15 @@ public class Product implements Parcelable {
 	/** Size of this alcohol. */
 	private String size;
 	/** The list of ProductInfo's for the given product. */
-	private ArrayList<PriceInfo> priceInfos;
+	private List<PriceInfo> priceInfos;
+	
+	/**
+	 * Default constructor. Used in constructor taking parcel to create the
+	 * array list
+	 */
+	public Product() {
+		priceInfos = new ArrayList<PriceInfo>();
+	}
 	
 	/**
 	 * Takes a JSON array of the product info for this product, and will turn it
@@ -45,8 +56,8 @@ public class Product implements Parcelable {
 	 * 				current location of the phone
 	 */
 	public Product(JSONArray productInfo, String productName, String size, Location location) {
+		this();
 		this.location = location;
-		priceInfos = new ArrayList<PriceInfo>();
 		this.productName = productName;
 		this.size = size;
 		
@@ -56,14 +67,8 @@ public class Product implements Parcelable {
 			// Response now handles the parse error
 			// TODO: if data is in incorrect format it can throw an error...
 		}
-	}
-	
-	/**
-	 * Default constructor. Used in constructor taking parcel to create the
-	 * array list
-	 */
-	public Product() {
-		priceInfos = new ArrayList<PriceInfo>();
+		
+		Collections.sort(priceInfos, new PriceInfoDistanceComparator());
 	}
 	
 	/**
@@ -121,6 +126,10 @@ public class Product implements Parcelable {
 		return size;
 	}
 	
+	public List<PriceInfo> getProductInfos() {
+		return priceInfos;
+	}
+	
 	/*
 	 * Check http://developer.android.com/reference/android/os/Parcelable.html
 	 * for details. These are all methods for Parcelable.
@@ -155,11 +164,4 @@ public class Product implements Parcelable {
 		}
 		
 	};
-	
-	/**
-	 *  productInfos getter 
-	 */
-	public ArrayList<PriceInfo> getProductInfos() {
-		return priceInfos;
-	}
 }
