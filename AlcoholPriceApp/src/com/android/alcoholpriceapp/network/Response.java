@@ -12,7 +12,7 @@ import org.json.JSONObject;
  */
 public class Response {
 	/** The data contained in the JSON response. */
-	private JSONArray data;
+	private JSONObject data;
 	/** The status of the response, basically whether or not it contained any
 	 * data.
 	 */
@@ -29,7 +29,7 @@ public class Response {
 		try {
 			JSONObject dataObj = new JSONObject(jsonStr);
 			String status = dataObj.getJSONObject("result").getString("status");
-			data = dataObj.getJSONArray("data");
+			data = dataObj.getJSONObject("data");
 			
 			if (status.equals("200"))
 				this.success = true;
@@ -59,7 +59,7 @@ public class Response {
 	 * 
 	 * @return the data of the response
 	 */
-	public JSONArray getData() {
+	public JSONObject getData() {
 		return data;
 	}
 }

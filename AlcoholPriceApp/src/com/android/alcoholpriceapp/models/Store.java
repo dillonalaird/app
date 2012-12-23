@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.alcoholpriceapp.gps.GPSTracker;
+
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,11 +16,16 @@ public class Store implements Parcelable {
 	
 	private String name;
 	private String address;
+	/** current location of the phone */
 	private Location location;
+	/** distance from phone to store */
+	private double dist;
 	
 	private ArrayList<PriceInfo> priceInfos;
 	
-	public Store(String name, String address, Location location, JSONArray storeInfo) {
+	public Store(Location location, JSONObject storeInfo) {
+		this();
+		
 		this.name = name;
 		this.address = address;
 		this.location = location;
@@ -44,9 +51,18 @@ public class Store implements Parcelable {
 		in.readTypedList(priceInfos, PriceInfo.CREATOR);
 	}
 	
-	private void parseData(JSONArray dataObj) throws JSONException {
-		for (int i = 0; i < dataObj.length(); i++) {
-			JSONObject dataField = dataObj.getJSONObject(i);
+	private void parseData(JSONObject dataObj) throws JSONException {
+		this.name = dataObj.getString("name");
+		this.address = dataObj.getString("address");
+		String[] coordinates = dataObj.getString("gps").split(",");
+		dist = GPSTracker.calculateGPSDistance(
+				Double.parseDouble(coordinates[0]), 
+				Double.parseDouble(coordinates[1]), 
+				location.getLatitude(), 
+				location.getLongitude());
+		
+		for (int i = 0; i < dataObj.getJSONArray("prices").length(); i++) {
+			JSONObject dataField = dataObj.getJSONArray("prices").getJSONObject(i);
 			int alcID = Integer.parseInt(dataField.getString("alcID"));
 			String alcoholName = dataField.getString("alcoholName");
 			int alcSize = dataField.getInt("alcoholSize");
@@ -96,6 +112,22 @@ public class Store implements Parcelable {
 	
 	private double degToRad(double degrees) {
 		return degrees * (Math.PI / 180);
+	}
+	
+	public ArrayList<PriceInfo> getPriceInfos() {
+		return priceInfos;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+	
+	public double getDist() {
+		return dist;
 	}
 	
 	/**

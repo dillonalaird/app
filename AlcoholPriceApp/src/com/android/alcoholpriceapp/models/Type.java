@@ -21,7 +21,7 @@ public class Type implements Parcelable {
 	private Type(Parcel in) {
 		this();
 		
-		in.readTypedList(products, Type.CREATOR);
+		in.readTypedList(products, Product.CREATOR);
 		alcoholType = in.readString();
 		size = in.readString();
 		
@@ -84,7 +84,7 @@ public class Type implements Parcelable {
 	
 	public static final Parcelable.Creator<Type> CREATOR = new Parcelable.Creator<Type>() {
 		public Type createFromParcel(Parcel in) {
-			return new Product(in);
+			return new Type(in);
 		}
 		
 		public Type[] newArray(int size) {

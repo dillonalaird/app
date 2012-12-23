@@ -70,7 +70,7 @@ public class Product implements Parcelable {
 	 * @param location    
 	 * 				current location of the phone
 	 */
-	public Product(JSONArray productInfo, String productName, String size, Location location) {
+	public Product(JSONObject productInfo, String productName, String size, Location location) {
 		this();
 		this.location = location;
 		this.productName = productName;
@@ -96,9 +96,9 @@ public class Product implements Parcelable {
 	 * @throws JSONException
 	 * 			If it can't find the data field, or any of data's fields.
 	 */
-	private void parseData(JSONArray dataObj) throws JSONException {
-		for (int i = 0; i < dataObj.length(); i++) {
-			JSONObject dataField = dataObj.getJSONObject(i);
+	private void parseData(JSONObject dataObj) throws JSONException {
+		for (int i = 0; i < dataObj.getJSONArray("prices").length(); i++) {
+			JSONObject dataField = dataObj.getJSONArray("prices").getJSONObject(i);
 			int storeID = Integer.parseInt(dataField.getString("storeID"));
 			String storeName = dataField.getString("store_name");
 			double price = Double.parseDouble(dataField.getString("price"));
@@ -126,8 +126,8 @@ public class Product implements Parcelable {
 		return size;
 	}
 	
-	public List<PriceInfo> getProductInfos() {
-		return priceInfos;
+	public ArrayList<PriceInfo> getProductInfos() {
+		return (ArrayList<PriceInfo>) priceInfos;
 	}
 	
 	/*
