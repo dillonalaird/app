@@ -28,7 +28,7 @@ public class Product implements Parcelable {
 	/** Size of this alcohol. */
 	private String size;
 	/** The list of ProductInfo's for the given product. */
-	private ArrayList<PriceInfo> productInfos;
+	private ArrayList<PriceInfo> priceInfos;
 	
 	/**
 	 * Takes a JSON array of the product info for this product, and will turn it
@@ -46,7 +46,7 @@ public class Product implements Parcelable {
 	 */
 	public Product(JSONArray productInfo, String productName, String size, Location location) {
 		this.location = location;
-		productInfos = new ArrayList<PriceInfo>();
+		priceInfos = new ArrayList<PriceInfo>();
 		this.productName = productName;
 		this.size = size;
 		
@@ -63,7 +63,7 @@ public class Product implements Parcelable {
 	 * array list
 	 */
 	public Product() {
-		productInfos = new ArrayList<PriceInfo>();
+		priceInfos = new ArrayList<PriceInfo>();
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class Product implements Parcelable {
 	private Product(Parcel in) {
 		this();
 		
-		in.readTypedList(productInfos, PriceInfo.CREATOR);
+		in.readTypedList(priceInfos, PriceInfo.CREATOR);
 		productName = in.readString();
 		size = in.readString();
 		location = in.readParcelable(null);
@@ -105,7 +105,7 @@ public class Product implements Parcelable {
 					location.getLatitude(), 
 					location.getLongitude());
 			
-			productInfos.add(new PriceInfo(storeID, storeName, price, dist));
+			priceInfos.add(new PriceInfo(storeID, storeName, price, dist));
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class Product implements Parcelable {
 		//we just need to write each field into
 		//the parcel
 		
-		out.writeTypedList(productInfos);
+		out.writeTypedList(priceInfos);
 		out.writeString(productName);
 		out.writeString(size);
 		out.writeParcelable(location, 0);
@@ -160,6 +160,6 @@ public class Product implements Parcelable {
 	 *  productInfos getter 
 	 */
 	public ArrayList<PriceInfo> getProductInfos() {
-		return productInfos;
+		return priceInfos;
 	}
 }
