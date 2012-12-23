@@ -20,10 +20,10 @@ import android.widget.Toast;
 
 import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
+import com.android.alcoholpriceapp.util.GPSUtility;
 
 /**
  * The browse page for the Alcohol Price Application. Allows the user to browse
@@ -157,31 +157,6 @@ public class BrowsePage extends Activity {
 		}
 		return true;
 	}
-	
-    /**
-     * Gets the current GPS location. If the user doesn't have GPS enabled pops
-     * up an alert dialog allowing the user to access settings and enable GPS.
-     * If GPS still isn't enabled, pops up an alert dialog displaying an error.
-     * 
-     * @return the current GPS location of the user.
-     */
-    private Location getLocation() {
-    	GPSTracker gps = new GPSTracker(this);
-    	if (!gps.canGetLocation()) // if gps isn't enabled
-    		gps.showSettingsAlert();
-    	
-    	if (gps.canGetLocation())
-    		return gps.getLocation();
-    	else {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		builder
-    			.setTitle("Error")
-    			.setMessage("No GPS enabled")
-    			.setPositiveButton("Okay", null)
-    			.show();
-    		return null;
-    	}
-    }
     
     private class SizeSpinnerActivity extends Activity implements OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,

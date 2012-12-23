@@ -26,11 +26,11 @@ import android.widget.Toast;
 
 import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Product;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
+import com.android.alcoholpriceapp.util.GPSUtility;
 
 /**
  * The search page for the Alcohol Price Application. Allows the user to search
@@ -142,7 +142,8 @@ public class SearchPage extends Activity {
 		    	
 		    	if (res.getSuccess()) {
 					Log.v("debug", "4");
-		    		Location location = getLocation();
+					GPSUtility gps = new GPSUtility(SearchPage.this);
+					Location location = gps.promptForGPS();
 		    		if (location != null) {
 			    		Parcelable product = new Product(res.getData(), 
 			    				alcohol.toLowerCase(Locale.ENGLISH).trim(), 
@@ -197,31 +198,6 @@ public class SearchPage extends Activity {
 		}
 		return true;
 	}
-    
-    /**
-     * Gets the current GPS location. If the user doesn't have GPS enabled pops
-     * up an alert dialog allowing the user to access settings and enable GPS.
-     * If GPS still isn't enabled, pops up an alert dialog displaying an error.
-     * 
-     * @return the current GPS location of the user.
-     */
-    private Location getLocation() {
-    	GPSTracker gps = new GPSTracker(this);
-    	if (!gps.canGetLocation()) // if gps isn't enabled
-    		gps.showSettingsAlert();
-    	
-    	if (gps.canGetLocation())
-    		return gps.getLocation();
-    	else {
-    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		builder
-    			.setTitle("Error")
-    			.setMessage("No GPS enabled")
-    			.setPositiveButton("Okay", null)
-    			.show();
-    		return null;
-    	}
-    }
     
     /**
      * SizeSpinnerActivity allows us to set selectedSize to the current item selected
