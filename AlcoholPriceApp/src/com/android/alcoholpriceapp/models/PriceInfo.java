@@ -114,7 +114,7 @@ public class PriceInfo implements Parcelable {
 	 * @param size in String format
 	 * @return integer format of the size
 	 */
-	public int convertSize(String size) {
+	public static int convertSize(String size) {
 		if (size.equals("Single"))
 			return 1;
 		else if (size.equals("40 oz"))
@@ -140,7 +140,7 @@ public class PriceInfo implements Parcelable {
 	 * @param size in integer format
 	 * @return String format of size
 	 */
-	public String convertSize(int size) {
+	public static String convertSize(int size) {
 		switch(size) {
 			case 1:
 				return "Single";
