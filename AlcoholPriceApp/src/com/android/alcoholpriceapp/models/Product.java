@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.android.alcoholpriceapp.util.GPSUtility;
-import com.android.alcoholpriceapp.util.PriceInfoDistanceComparator;
 
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+
+import com.android.alcoholpriceapp.util.GPSUtility;
+import com.android.alcoholpriceapp.util.PriceInfoDistanceComparator;
 
 /**
  * Product represents an alcohol product. It takes in a JSON string and grab 

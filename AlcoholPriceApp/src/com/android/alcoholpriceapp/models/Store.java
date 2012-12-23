@@ -26,8 +26,6 @@ public class Store implements Parcelable {
 	public Store(Location location, JSONObject storeInfo) {
 		this();
 		
-		this.name = name;
-		this.address = address;
 		this.location = location;
 		
 		try {

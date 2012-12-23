@@ -33,6 +33,15 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 			} else if (params[1] == "STORE") {
 				/** [2] - id of store */
 				rawResponse = getRequest(params[1].toLowerCase(), params[2]);
+			} else if (params[1] == "TYPE") {
+				/** [2] - id of size [3] - id of type */
+				rawResponse = getRequest(params[1].toLowerCase(), params[2], params[3]);
+			} else if (params[1] == "TYPES") {
+				/** no additional parameters */
+				rawResponse = getRequest(params[1].toLowerCase());
+			} else if (params[1] == "SIZES") {
+				/** no additional parameters */
+				rawResponse = getRequest(params[1].toLowerCase());
 			}
 		} else if (params[0] == "POST") {
 			/* not yet implemented
