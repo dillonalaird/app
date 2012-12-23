@@ -2,6 +2,9 @@ package com.android.alcoholpriceapp.pages;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +22,8 @@ import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.gps.GPSTracker;
 import com.android.alcoholpriceapp.menu.MenuControl;
+import com.android.alcoholpriceapp.network.APICall;
+import com.android.alcoholpriceapp.network.Response;
 
 /**
  * The browse page for the Alcohol Price Application. Allows the user to browse
@@ -34,6 +39,7 @@ public class BrowsePage extends Activity {
 	private Button browseButton;
 	private String selectedSize;
 	private String selectedType;
+	private ProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,10 @@ public class BrowsePage extends Activity {
 
 		findAllViewsById();
 		initSpinner();
+		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
+		alcoholTypeSpinner.setOnItemSelectedListener(new TypeSpinnerActivity());
+		
+		browseButton.setOnClickListener(onBrowseClickListener);
 	}
 
 	/**
@@ -74,14 +84,42 @@ public class BrowsePage extends Activity {
 		sizeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	}
 
-	public void addListenerOnButton() {
-		browseButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// This is where we need to send the HTTP request to the server
+	private OnClickListener onBrowseClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (checkInput(selectedType, selectedSize)) {
+				progressDialog = ProgressDialog.show(BrowsePage.this, "Please wait...",
+						"Retrieving data...", true, true);
+				
+				Response res = null;
+				final APICall browseTask = new APICall();
+				try {
+					
+				} catch (Exception e) {
+					
+				}
+				
+				progressDialog.setOnCancelListener(new OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						if (browseTask != null) browseTask.cancel(true);
+					}
+				});
+				
+				if (res.getSuccess()) {
+					
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(BrowsePage.this);
+					builder
+						.setTitle("Sorry!")
+						.setMessage("We could not find that alcohol in our database")
+						.setPositiveButton("Okay", null)
+						.show();
+					progressDialog.cancel();
+				}
 			}
-		});
-	}
+		}
+	};
 
 	/**
 	 * Creates the options menu to display on this activity.

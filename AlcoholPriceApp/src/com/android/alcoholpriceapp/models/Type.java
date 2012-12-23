@@ -6,13 +6,25 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class Type {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Type implements Parcelable {
 	private String alcoholType;
 	private String size;
 	private List<Product> products;
 	
 	public Type() {
 		products = new ArrayList<Product>();
+	}
+	
+	private Type(Parcel in) {
+		this();
+		
+		in.readTypedList(products, Type.CREATOR);
+		alcoholType = in.readString();
+		size = in.readString();
+		
 	}
 	
 	public Type(JSONArray typeInfo, String alcoholType, String size) {
@@ -59,4 +71,24 @@ public class Type {
 	public void setSize(String size) {
 		this.size = size;
 	}
+	
+	public int describeContents() {
+		return 0;
+	}
+	
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeTypedList(products);
+		out.writeString(alcoholType);
+		out.writeString(size);
+	}
+	
+	public static final Parcelable.Creator<Type> CREATOR = new Parcelable.Creator<Type>() {
+		public Type createFromParcel(Parcel in) {
+			return new Product(in);
+		}
+		
+		public Type[] newArray(int size) {
+			return new Type[size];
+		}
+	};
 }

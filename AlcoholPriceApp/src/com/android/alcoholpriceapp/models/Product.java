@@ -42,6 +42,21 @@ public class Product implements Parcelable {
 	}
 	
 	/**
+	 * Constructor taking in a parcel. The order that data is put into the parcel
+	 * is the order that data needs to be taken back out
+	 * 
+	 * @param in - the parcel to create the object from
+	 */
+	private Product(Parcel in) {
+		this();
+		
+		in.readTypedList(priceInfos, PriceInfo.CREATOR);
+		productName = in.readString();
+		size = in.readString();
+		location = in.readParcelable(null);
+	}
+	
+	/**
 	 * Takes a JSON array of the product info for this product, and will turn it
 	 * into the proper array list. Also takes the name and size of the product,
 	 * as well as the current location.
@@ -69,21 +84,6 @@ public class Product implements Parcelable {
 		}
 		
 		Collections.sort(priceInfos, new PriceInfoDistanceComparator());
-	}
-	
-	/**
-	 * Constructor taking in a parcel. The order that data is put into the parcel
-	 * is the order that data needs to be taken back out
-	 * 
-	 * @param in - the parcel to create the object from
-	 */
-	private Product(Parcel in) {
-		this();
-		
-		in.readTypedList(priceInfos, PriceInfo.CREATOR);
-		productName = in.readString();
-		size = in.readString();
-		location = in.readParcelable(null);
 	}
 	
 	/**
