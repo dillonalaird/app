@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="5"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:color="#fff" >
+    
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:weightSum="2"
+	    android:layout_width="fill_parent"
+	    android:layout_height="0dp" 
+	    android:layout_weight="1" >
+	    
+        <LinearLayout
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:orientation="horizontal"
+		    android:weightSum="2"
+		    android:layout_width="0dp"
+		    android:layout_height="fill_parent" 
+		    android:layout_weight="1" >  
+	    </LinearLayout>
+	    
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:orientation="horizontal"
+		    android:layout_width="0dp"
+		    android:layout_height="fill_parent" 
+		    android:layout_weight="1" >
+	    </LinearLayout>
+	</LinearLayout>
+        
+    <ListView
+        android:id="@+id/itemsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:layout_marginTop="3dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+		android:divider="#000" 
+		android:dividerHeight="1px"
+		android:background="@drawable/border_ui" >
+    </ListView>
 
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-        </TableRow>
-
-    </TableLayout>
-
-</RelativeLayout>
+</LinearLayout>

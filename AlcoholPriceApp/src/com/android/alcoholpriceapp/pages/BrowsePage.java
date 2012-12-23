@@ -24,6 +24,7 @@ import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 import com.android.alcoholpriceapp.util.GPSUtility;
+import com.android.alcoholpriceapp.util.Util;
 
 /**
  * The browse page for the Alcohol Price Application. Allows the user to browse
@@ -165,25 +166,7 @@ public class BrowsePage extends Activity {
     		// Converts the sizes to String representations of ints so the database
     		// can parse them easier
     		String size = parent.getItemAtPosition(pos).toString();
-    		if (size.equals("Single"))
-    			size = "1";
-    		else if (size.equals("40 oz"))
-    			size = "2";
-    		else if (size.equals("6 pack"))
-    			size = "3";
-    		else if (size.equals("12 pack"))
-    			size = "4";
-    		else if (size.equals("18 pack"))
-    			size = "5";
-    		else if (size.equals("24 pack"))
-    			size = "6";
-    		else if (size.equals("16 oz (pint)"))
-    			size = "7";
-    		else if (size.equals("750mL (fifth)"))
-    			size = "8";
-    		else // if (size.equals("1.5L (half gallon)"))
-    			size = "9";
-    		selectedSize = size;
+    		selectedSize = Util.convertSize(size) + "";
     	}
     	
     	public void onNothingSelected(AdapterView<?> parent) {

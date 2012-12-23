@@ -35,7 +35,7 @@ public class Product implements Parcelable {
 	
 	/**
 	 * Default constructor. Used in constructor taking parcel to create the
-	 * array list
+	 * array list.
 	 */
 	public Product() {
 		priceInfos = new ArrayList<PriceInfo>();
@@ -57,27 +57,27 @@ public class Product implements Parcelable {
 	}
 	
 	/**
-	 * Takes a JSON array of the product info for this product, and will turn it
+	 * Takes a JSON array of the price info for this product, and will turn it
 	 * into the proper array list. Also takes the name and size of the product,
 	 * as well as the current location.
 	 * 
-	 * @param productInfo
-	 *				JSON array containing product info (parsed by response)
+	 * @param priceInfo
+	 *			JSON array containing price info (checked by Response).
 	 * @param productName
-	 * 				name of the alcohol
+	 * 			Name of the alcohol.
 	 * @param size        
-	 * 				size of the alcohol
+	 * 			Size of the alcohol.
 	 * @param location    
-	 * 				current location of the phone
+	 * 			Current location of the phone.
 	 */
-	public Product(JSONArray productInfo, String productName, String size, Location location) {
+	public Product(JSONArray priceInfo, String productName, String size, Location location) {
 		this();
 		this.location = location;
 		this.productName = productName;
 		this.size = size;
 		
 		try {
-			parseData(productInfo);
+			parseData(priceInfo);
 		} catch (JSONException e) {
 			// Response now handles the parse error
 			// TODO: if data is in incorrect format it can throw an error...
@@ -141,7 +141,7 @@ public class Product implements Parcelable {
 	
 	/**
 	 * Creates the parcel when called. The order data is put into the parcel
-	 * is the order that data must be pulled back out
+	 * is the order that data must be pulled back out.
 	 */
 	public void writeToParcel(Parcel out, int flags) {
 		//we just need to write each field into
