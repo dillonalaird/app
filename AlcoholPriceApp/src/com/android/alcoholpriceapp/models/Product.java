@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.alcoholpriceapp.gps.GPSTracker;
+import com.android.alcoholpriceapp.util.GPSUtility;
 import com.android.alcoholpriceapp.util.PriceInfoDistanceComparator;
 
 import android.location.Location;
@@ -104,7 +104,7 @@ public class Product implements Parcelable {
 			double price = Double.parseDouble(dataField.getString("price"));
 			
 			String[] coordinates = dataField.getString("store_gps").split(",");
-			double dist = GPSTracker.calculateGPSDistance(
+			double dist = GPSUtility.calculateGPSDistance(
 					Double.parseDouble(coordinates[0]), 
 					Double.parseDouble(coordinates[1]), 
 					location.getLatitude(), 
@@ -126,8 +126,8 @@ public class Product implements Parcelable {
 		return size;
 	}
 	
-	public List<PriceInfo> getProductInfos() {
-		return priceInfos;
+	public ArrayList<PriceInfo> getProductInfos() {
+		return (ArrayList<PriceInfo>) priceInfos;
 	}
 	
 	/*
