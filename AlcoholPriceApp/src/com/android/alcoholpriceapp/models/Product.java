@@ -1,12 +1,15 @@
 package com.android.alcoholpriceapp.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.alcoholpriceapp.gps.GPSTracker;
+import com.android.alcoholpriceapp.util.PriceInfoDistanceComparator;
 
 import android.location.Location;
 import android.os.Parcel;
@@ -28,7 +31,30 @@ public class Product implements Parcelable {
 	/** Size of this alcohol. */
 	private String size;
 	/** The list of ProductInfo's for the given product. */
-	private ArrayList<PriceInfo> productInfos;
+	private List<PriceInfo> priceInfos;
+	
+	/**
+	 * Default constructor. Used in constructor taking parcel to create the
+	 * array list
+	 */
+	public Product() {
+		priceInfos = new ArrayList<PriceInfo>();
+	}
+	
+	/**
+	 * Constructor taking in a parcel. The order that data is put into the parcel
+	 * is the order that data needs to be taken back out
+	 * 
+	 * @param in - the parcel to create the object from
+	 */
+	private Product(Parcel in) {
+		this();
+		
+		in.readTypedList(priceInfos, PriceInfo.CREATOR);
+		productName = in.readString();
+		size = in.readString();
+		location = in.readParcelable(null);
+	}
 	
 	/**
 	 * Takes a JSON array of the product info for this product, and will turn it
@@ -45,8 +71,8 @@ public class Product implements Parcelable {
 	 * 				current location of the phone
 	 */
 	public Product(JSONArray productInfo, String productName, String size, Location location) {
+		this();
 		this.location = location;
-		productInfos = new ArrayList<PriceInfo>();
 		this.productName = productName;
 		this.size = size;
 		
@@ -56,29 +82,8 @@ public class Product implements Parcelable {
 			// Response now handles the parse error
 			// TODO: if data is in incorrect format it can throw an error...
 		}
-	}
-	
-	/**
-	 * Default constructor. Used in constructor taking parcel to create the
-	 * array list
-	 */
-	private Product() {
-		productInfos = new ArrayList<PriceInfo>();
-	}
-	
-	/**
-	 * Constructor taking in a parcel. The order that data is put into the parcel
-	 * is the order that data needs to be taken back out
-	 * 
-	 * @param in - the parcel to create the object from
-	 */
-	private Product(Parcel in) {
-		this();
 		
-		in.readTypedList(productInfos, PriceInfo.CREATOR);
-		productName = in.readString();
-		size = in.readString();
-		location = in.readParcelable(null);
+		Collections.sort(priceInfos, new PriceInfoDistanceComparator());
 	}
 	
 	/**
@@ -105,7 +110,7 @@ public class Product implements Parcelable {
 					location.getLatitude(), 
 					location.getLongitude());
 			
-			productInfos.add(new PriceInfo(storeID, storeName, price, dist));
+			priceInfos.add(new PriceInfo(storeID, storeName, price, dist));
 		}
 	}
 	
@@ -119,6 +124,10 @@ public class Product implements Parcelable {
 	
 	public String getSize() {
 		return size;
+	}
+	
+	public List<PriceInfo> getProductInfos() {
+		return priceInfos;
 	}
 	
 	/*
@@ -138,7 +147,7 @@ public class Product implements Parcelable {
 		//we just need to write each field into
 		//the parcel
 		
-		out.writeTypedList(productInfos);
+		out.writeTypedList(priceInfos);
 		out.writeString(productName);
 		out.writeString(size);
 		out.writeParcelable(location, 0);
@@ -155,11 +164,4 @@ public class Product implements Parcelable {
 		}
 		
 	};
-	
-	/**
-	 *  productInfos getter 
-	 */
-	public ArrayList<PriceInfo> getProductInfos() {
-		return productInfos;
-	}
 }
