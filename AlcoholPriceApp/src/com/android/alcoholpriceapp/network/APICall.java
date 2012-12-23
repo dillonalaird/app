@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 
 
 public class APICall extends AsyncTask<String, Integer, Response> {
+	
+	private final String PARENT_URL = "http://easyuniv.com/API/";
 
 	/**
 	 * called when you call execute()
@@ -26,8 +28,11 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 		
 		if (params[0] == "GET") {
 			if(params[1] == "PRODUCT") {
-				/** [1] - name of alcohol [2] - size of alcohol */
-				rawResponse = getProduct(params[2], params[3]);
+				/** [2] - name of alcohol [3] - size of alcohol */
+				rawResponse = getRequest(params[1].toLowerCase(), params[2], params[3]);
+			} else if (params[1] == "STORE") {
+				/** [2] - id of store */
+				rawResponse = getRequest(params[1].toLowerCase(), params[2]);
 			}
 		} else if (params[0] == "POST") {
 			/* not yet implemented
@@ -51,11 +56,16 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 		return res;
 	}
 	
-	private String getProduct(	String name, String size) {
+	private String getRequest(String function, String... params) {
+		String url = PARENT_URL + function;
+		for(String p : params) {
+			url += "/" + p;
+		}
+		
 		BufferedReader in = null;
 		String data = null;
 		
-		HttpGet request = new HttpGet("http://easyuniv.com/API/product/" + name + "/" + size);
+		HttpGet request = new HttpGet(url);
 		DefaultHttpClient client = new DefaultHttpClient();
 		try {
 			HttpResponse response = client.execute(request);

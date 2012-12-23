@@ -49,7 +49,7 @@ public class PriceInfo implements Parcelable {
 	public PriceInfo(int alcID, String alcName, int alcSize, double price) {
 		this.alcID = alcID;
 		this.alcName = alcName;
-		//big if then to get size name
+		this.alcSize = convertSize(alcSize);
 		this.price = price;
 		
 		storeID = -1;
@@ -71,6 +71,9 @@ public class PriceInfo implements Parcelable {
 		dist = in.readDouble();
 		price = in.readDouble();
 		storeName = in.readString();
+		alcID = in.readInt();
+		alcName = in.readString();
+		alcSize = in.readString();
 	}	
 	
 	/*
@@ -105,6 +108,12 @@ public class PriceInfo implements Parcelable {
 		return alcSize;
 	}
 	
+	/**
+	 * This function takes the String format of size and turns it into an integer
+	 * 
+	 * @param size in String format
+	 * @return integer format of the size
+	 */
 	public int convertSize(String size) {
 		if (size.equals("Single"))
 			return 1;
@@ -126,6 +135,11 @@ public class PriceInfo implements Parcelable {
 			return 9;
 	}
 	
+	/**
+	 * This function takes the integer format of size and turns it into a String
+	 * @param size in integer format
+	 * @return String format of size
+	 */
 	public String convertSize(int size) {
 		switch(size) {
 			case 1:
@@ -217,5 +231,8 @@ public class PriceInfo implements Parcelable {
 		out.writeDouble(dist);
 		out.writeDouble(price);
 		out.writeString(storeName);
+		out.writeInt(alcID);
+		out.writeString(alcName);
+		out.writeString(alcSize);
 	}
 }

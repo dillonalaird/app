@@ -30,6 +30,8 @@ public class ProductPage extends Activity {
 	//will be removed, used to pass through to the store page for testing
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	
+	Product product = null;
+	
 	private ListView listView;
 
 	/**
@@ -43,7 +45,7 @@ public class ProductPage extends Activity {
         setContentView(R.layout.product_page);
         
         Bundle bundle = getIntent().getExtras();
-        Product product = bundle.getParcelable("Product");
+        product = bundle.getParcelable("Product");
         
         ProductAdapter adapter = new ProductAdapter(this, R.layout.product_row, product.getProductInfos());
         
@@ -65,7 +67,10 @@ public class ProductPage extends Activity {
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 			// TODO change from toast to change activity
 			Intent intent = new Intent(ProductPage.this, StorePage.class);
-			intent.putExtra(EXTRA_MESSAGE, listView.getItemAtPosition(arg2).toString());
+			
+			//passing ID to do search on other side
+			intent.putExtra(EXTRA_MESSAGE, product.getProductInfos()
+							.get((int)listView.getItemIdAtPosition(arg2)).getStoreID());
 			startActivity(intent);
 			
 			Toast.makeText(getBaseContext(), listView.getItemAtPosition(arg2).toString(), 1000).show();
