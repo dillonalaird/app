@@ -17,11 +17,11 @@ public class StorePage extends Activity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.store_page);
         
-        //final TextView mTextView = (TextView) findViewById(R.id.test);
+        final TextView mTextView = (TextView) findViewById(R.id.storeNameText);
         
         Intent intent = getIntent();
-        String message = intent.getStringExtra(ProductPage.EXTRA_MESSAGE);
-        //mTextView.setText(message);
+        int id = intent.getIntExtra("ID", 0);
+        mTextView.setText(Integer.toString(id));
     }
 
     @Override

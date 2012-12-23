@@ -8,7 +8,6 @@
     android:color="#FFF" >
     
     <LinearLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
 	    android:weightSum="2"
 	    android:layout_width="fill_parent"
@@ -16,12 +15,28 @@
 	    android:layout_weight="1" >
     
 	    <LinearLayout
-		    xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:orientation="horizontal"
+		    android:orientation="vertical"
 		    android:weightSum="2"
 		    android:layout_width="0dp"
 		    android:layout_height="fill_parent" 
 		    android:layout_weight="1" >
+		    
+	        <TextView
+	            android:id="@+id/storeNameText"
+	            
+	            android:layout_width="fill_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1" />
+		    
+	        <TextView
+	            android:id="@+id/storeAdressText"
+	            
+	            android:layout_width="fill_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1" 
+	            
+	            android:textSize="12dp" 
+	        	android:textColor="#545454"/>
 		    
 	    </LinearLayout>
 	    

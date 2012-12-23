@@ -27,9 +27,6 @@ import com.android.alcoholpriceapp.models.Product;
  * @author Troy Cosentino
  */
 public class ProductPage extends Activity {
-	//will be removed, used to pass through to the store page for testing
-	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
-	
 	Product product = null;
 	
 	private ListView listView;
@@ -69,8 +66,8 @@ public class ProductPage extends Activity {
 			Intent intent = new Intent(ProductPage.this, StorePage.class);
 			
 			//passing ID to do search on other side
-			intent.putExtra(EXTRA_MESSAGE, product.getProductInfos()
-							.get((int)listView.getItemIdAtPosition(arg2)).getStoreID());
+			intent.putExtra("ID", product.getProductInfos()
+					.get((int)listView.getItemIdAtPosition(arg2)).getStoreID());
 			startActivity(intent);
 			
 			Toast.makeText(getBaseContext(), listView.getItemAtPosition(arg2).toString(), 1000).show();
