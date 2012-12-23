@@ -2,9 +2,10 @@ package com.android.alcoholpriceapp.models;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.android.alcoholpriceapp.util.GPSUtility;
 
 import android.location.Location;
 import android.os.Parcel;
@@ -14,11 +15,16 @@ public class Store implements Parcelable {
 	
 	private String name;
 	private String address;
+	/** current location of the phone */
 	private Location location;
+	/** distance from phone to store */
+	private double dist;
 	
 	private ArrayList<PriceInfo> priceInfos;
 	
-	public Store(String name, String address, Location location, JSONArray storeInfo) {
+	public Store(Location location, JSONObject storeInfo) {
+		this();
+		
 		this.name = name;
 		this.address = address;
 		this.location = location;
@@ -44,9 +50,18 @@ public class Store implements Parcelable {
 		in.readTypedList(priceInfos, PriceInfo.CREATOR);
 	}
 	
-	private void parseData(JSONArray dataObj) throws JSONException {
-		for (int i = 0; i < dataObj.length(); i++) {
-			JSONObject dataField = dataObj.getJSONObject(i);
+	private void parseData(JSONObject dataObj) throws JSONException {
+		this.name = dataObj.getString("name");
+		this.address = dataObj.getString("address");
+		String[] coordinates = dataObj.getString("gps").split(",");
+		dist = GPSUtility.calculateGPSDistance(
+				Double.parseDouble(coordinates[0]), 
+				Double.parseDouble(coordinates[1]), 
+				location.getLatitude(), 
+				location.getLongitude());
+		
+		for (int i = 0; i < dataObj.getJSONArray("prices").length(); i++) {
+			JSONObject dataField = dataObj.getJSONArray("prices").getJSONObject(i);
 			int alcID = Integer.parseInt(dataField.getString("alcID"));
 			String alcoholName = dataField.getString("alcoholName");
 			int alcSize = dataField.getInt("alcoholSize");
@@ -56,46 +71,20 @@ public class Store implements Parcelable {
 		}
 	}
 	
-	/**
-	 * Calculates the distance between GPSCoord and the users current GPS
-	 * coordinates.
-	 * 
-	 * @param GPSCoord
-	 * 			GPS coordinates. Assumes that GPSCoord follows the following
-	 * format "latitude, longitude"
-	 * @return the distance between GPSCoord and the users current GPS coordinates.
-	 */
-	private double calculateGPSDistance(String GPSCoord) {
-		double lat1 = location.getLatitude();
-		double long1 = location.getLongitude();
-		String[] coordinates = GPSCoord.split(",");
-		double lat2 = Double.parseDouble(coordinates[0]);
-		double long2 = Double.parseDouble(coordinates[1]);
-		
-		// Check http://www.smokycogs.com/blog/finding-the-distance-between-two-gps-coordinates/
-		// for details.
-		lat1 = degToRad(lat1);
-		long1 = degToRad(long1);
-		lat2 = degToRad(lat2);
-		long2 = degToRad(long2);
-		
-		double earthRadius = 6371; // km
-		double deltaLat = lat2 - lat1;
-		double deltaLong = long2 - long1;
-		double a = Math.sin(deltaLat / 2.0) * Math.sin(deltaLat / 2.0) + 
-				Math.cos(lat1) * Math.cos(lat2) *
-				Math.sin(deltaLong / 2.0) * Math.sin(deltaLong / 2.0);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double distance = earthRadius * c;
-		return distance;
+	public ArrayList<PriceInfo> getPriceInfos() {
+		return priceInfos;
 	}
 	
-	private double radToDeg(double radians) {
-		return radians * (180 / Math.PI);
+	public String getName() {
+		return name;
 	}
 	
-	private double degToRad(double degrees) {
-		return degrees * (Math.PI / 180);
+	public String getAddress() {
+		return address;
+	}
+	
+	public double getDist() {
+		return dist;
 	}
 	
 	/**

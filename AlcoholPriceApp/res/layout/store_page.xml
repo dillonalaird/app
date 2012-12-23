@@ -16,20 +16,23 @@
     
 	    <LinearLayout
 		    android:orientation="vertical"
-		    android:weightSum="2"
+		    android:weightSum="3"
 		    android:layout_width="0dp"
 		    android:layout_height="fill_parent" 
-		    android:layout_weight="1" >
+		    android:layout_weight="1"
+        	android:layout_marginLeft="5dp" >
 		    
 	        <TextView
 	            android:id="@+id/storeNameText"
 	            
 	            android:layout_width="fill_parent"
 	            android:layout_height="0dp"
-	            android:layout_weight="1" />
+	            android:layout_weight="1" 
+	            
+	            android:textSize="24dp" />
 		    
 	        <TextView
-	            android:id="@+id/storeAdressText"
+	            android:id="@+id/storeAddressText"
 	            
 	            android:layout_width="fill_parent"
 	            android:layout_height="0dp"
@@ -37,6 +40,17 @@
 	            
 	            android:textSize="12dp" 
 	        	android:textColor="#545454"/>
+		    
+	        <TextView
+	            android:id="@+id/storeDistanceText"
+	            
+	            android:layout_width="fill_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1" 
+	            
+	            android:textSize="10dp" 
+	        	android:textColor="#545454"
+	        	android:gravity="bottom"/>
 		    
 	    </LinearLayout>
 	    

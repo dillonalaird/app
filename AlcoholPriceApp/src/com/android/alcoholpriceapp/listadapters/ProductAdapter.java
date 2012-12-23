@@ -63,7 +63,7 @@ public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 		}
 		
 		PriceInfo product = data.get(position);
-		holder.distanceText.setText(Double.toString(product.getDist()) + " away");
+		holder.distanceText.setText(Double.toString(product.getDist()) + " mi");
 		holder.priceText.setText("$" + Double.toString(product.getPrice()));
 		holder.storeText.setText(product.getStoreName());
 		
