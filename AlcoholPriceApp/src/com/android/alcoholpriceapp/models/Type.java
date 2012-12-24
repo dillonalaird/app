@@ -3,8 +3,8 @@ package com.android.alcoholpriceapp.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -50,7 +50,7 @@ public class Type implements Parcelable {
 	 * @param size
 	 * 			Size of the alcohol.
 	 */
-	public Type(JSONArray productInfo, String alcoholType, String size) {
+	public Type(JSONObject productInfo, String alcoholType, String size) {
 		this();
 		this.alcoholType = alcoholType;
 		this.size = size;
@@ -63,8 +63,9 @@ public class Type implements Parcelable {
 		}
 	}
 	
-	private void parseData(JSONArray dataObj) throws JSONException {
-		
+	private void parseData(JSONObject dataObj) throws JSONException {
+		for (int i = 0; i < dataObj.getJSONArray("alcohols").length(); i++)
+			products.add(dataObj.getJSONArray("alcohols").getString(i));
 	}
 
 	/*

@@ -1,8 +1,9 @@
 package com.android.alcoholpriceapp.network;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 /**
  * Response serves as an intermediary object between getting the initial JSON 

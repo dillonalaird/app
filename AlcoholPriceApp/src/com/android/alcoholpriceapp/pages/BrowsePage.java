@@ -5,8 +5,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.location.Location;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +22,9 @@ import android.widget.Toast;
 import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.menu.MenuControl;
+import com.android.alcoholpriceapp.models.Type;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
-import com.android.alcoholpriceapp.util.GPSUtility;
 import com.android.alcoholpriceapp.util.Util;
 
 /**
@@ -95,9 +96,10 @@ public class BrowsePage extends Activity {
 				Response res = null;
 				final APICall browseTask = new APICall();
 				try {
-					
+					res = browseTask.execute("GET", "TYPE", selectedType, selectedSize);
 				} catch (Exception e) {
-					
+					// not network error, this is an exception thrown by AsyncTask's execute method
+					// TODO: AsyncTask execute exception
 				}
 				
 				progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -108,7 +110,11 @@ public class BrowsePage extends Activity {
 				});
 				
 				if (res.getSuccess()) {
-					
+					Parcelable type = new Type(res.getData(), selectedType, selectedSize);
+					Intent intent = new Intent(BrowsePage.this, TypePage.class);
+					intent.putExtra("Type", type);
+					progressDialog.cancel();
+					startActivity(intent);
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(BrowsePage.this);
 					builder
