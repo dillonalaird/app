@@ -96,7 +96,7 @@ public class BrowsePage extends Activity {
 				Response res = null;
 				final APICall browseTask = new APICall();
 				try {
-					res = browseTask.execute("GET", "TYPE", selectedType, selectedSize);
+					res = browseTask.execute("GET", "TYPE", selectedType, selectedSize).get();
 				} catch (Exception e) {
 					// not network error, this is an exception thrown by AsyncTask's execute method
 					// TODO: AsyncTask execute exception

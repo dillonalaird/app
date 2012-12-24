@@ -42,7 +42,6 @@ public class TypePage extends Activity{
 			Intent intent = new Intent(TypePage.this, ProductPage.class);
 			
 			
-			
 		}
 	};
 

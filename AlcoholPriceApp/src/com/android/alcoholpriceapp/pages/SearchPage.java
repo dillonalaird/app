@@ -31,6 +31,7 @@ import com.android.alcoholpriceapp.models.Product;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 import com.android.alcoholpriceapp.util.GPSUtility;
+import com.android.alcoholpriceapp.util.SizeTypeUtility;
 import com.android.alcoholpriceapp.util.Util;
 
 /**
@@ -73,6 +74,11 @@ public class SearchPage extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		
+		SizeTypeUtility.INSTANCE.updateSizes();
+		SizeTypeUtility.INSTANCE.updateTypes(); // might as well?
+		for (String s : SizeTypeUtility.INSTANCE.getSizeList())
+			Log.d("sizeList", s);
 
 		findAllViewsById();
 		initSpinner();
@@ -99,9 +105,17 @@ public class SearchPage extends Activity {
 	private void initSpinner() {
 		// Check http://developer.android.com/guide/topics/ui/controls/spinner.html
 		// for details on this method
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-				R.array.size_of_alcohol, android.R.layout.simple_spinner_item);
+//		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//				R.array.size_of_alcohol, android.R.layout.simple_spinner_item);
+		Log.d("SearchPage", "about to create new arrayadapter");
+		for (String s : SizeTypeUtility.INSTANCE.getSizeList())
+			Log.d("sizeList", s);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item,
+				SizeTypeUtility.INSTANCE.getSizeList());
+		Log.d("SearchPage", "about to setDropDownViewResource");
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		Log.d("SearchPage", "about to setAdapter");
 		sizeSpinner.setAdapter(adapter);
 		sizeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	}
