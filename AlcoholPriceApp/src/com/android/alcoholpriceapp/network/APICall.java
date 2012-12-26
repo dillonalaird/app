@@ -2,6 +2,7 @@ package com.android.alcoholpriceapp.network;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -12,7 +13,7 @@ import android.os.AsyncTask;
 
 public class APICall extends AsyncTask<String, Integer, Response> {
 	
-	private final String PARENT_URL = "http://easyuniv.com/API/";
+	private final String PARENT_URL = "easyuniv.com/API";
 
 	/**
 	 * called when you call execute()
@@ -66,39 +67,48 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 	}
 	
 	private String getRequest(String function, String... params) {
-		String url = PARENT_URL + function;
+		String extention = "/" + function;
 		for(String p : params) {
-			url += "/" + p;
+			extention += "/" + p;
+		}
+		URI uri = null;
+		try{
+			uri = new URI("http", PARENT_URL, extention, null);
+		} catch (Exception e) {
+			//TODO: uri exception
 		}
 		
-		BufferedReader in = null;
-		String data = null;
-		
-		HttpGet request = new HttpGet(url);
-		DefaultHttpClient client = new DefaultHttpClient();
-		try {
-			HttpResponse response = client.execute(request);
-			in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-			StringBuffer sb = new StringBuffer("");
-			String l = "";
-			String nl = System.getProperty("line.separator");
-			while((l = in.readLine()) != null) {
-				sb.append(l + nl);
-			}
-			in.close();
-			data = sb.toString();
-		} catch(Exception e) {
-			e.printStackTrace();
-			// TODO: add some sort of network error dialog box
-		} finally {
-			if(in != null) {
-				try {
-					in.close();
-				} catch(Exception e) {
-					//do something?
+		if(uri != null) {
+			BufferedReader in = null;
+			String data = null;
+			
+			HttpGet request = new HttpGet(uri.toString());
+			DefaultHttpClient client = new DefaultHttpClient();
+			try {
+				HttpResponse response = client.execute(request);
+				in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+				StringBuffer sb = new StringBuffer("");
+				String l = "";
+				String nl = System.getProperty("line.separator");
+				while((l = in.readLine()) != null) {
+					sb.append(l + nl);
+				}
+				in.close();
+				data = sb.toString();
+			} catch(Exception e) {
+				e.printStackTrace();
+				// TODO: add some sort of network error dialog box
+			} finally {
+				if(in != null) {
+					try {
+						in.close();
+					} catch(Exception e) {
+						//do something?
+					}
 				}
 			}
+			return data;
 		}
-		return data;
+		return null;
 	}
 }
