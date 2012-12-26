@@ -7,9 +7,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
+import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.PriceInfo;
 import com.android.alcoholpriceapp.models.Product;
 import com.android.alcoholpriceapp.network.APICall;
@@ -108,7 +108,7 @@ public class ProductPage extends Activity {
         TextView alcoholSizeText = (TextView) findViewById(R.id.alcoholSizeText);
         
         alcoholNameText.setText(product.getProductName());
-        alcoholSizeText.setText(PriceInfo.convertSize(Integer.parseInt(product.getSize())));
+        alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(product.getSize())));
     }
     
     /**
@@ -131,5 +131,13 @@ public class ProductPage extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
+    }
+    
+    /**
+     * Runs MenuControl when a certain menu item is selected.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	return MenuControl.selectMenuItem(item, this);
     }
 }

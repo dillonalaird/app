@@ -10,6 +10,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
 import com.android.alcoholpriceapp.listadapters.StoreAdapter;
+import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Store;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
@@ -127,5 +129,13 @@ public class StorePage extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
+    }
+    
+    /**
+     * Runs MenuControl when a certain menu item is selected.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	return MenuControl.selectMenuItem(item, this);
     }
 }

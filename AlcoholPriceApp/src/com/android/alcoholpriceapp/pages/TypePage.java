@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -14,6 +15,7 @@ import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.listadapters.TypeAdapter;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Type;
+import com.android.alcoholpriceapp.util.SizeTypeUtility;
 
 public class TypePage extends Activity{
 	private Type type = null;
@@ -33,6 +35,13 @@ public class TypePage extends Activity{
 		listView.setAdapter(adapter);
 		
 		listView.setOnItemClickListener(listViewItemClickListener);
+		
+		TextView alcoholTypeText = (TextView) findViewById(R.id.alcoholTypeText);
+		TextView alcoholSizeText = (TextView) findViewById(R.id.alcoholTypeSizeText);
+		
+		alcoholTypeText.setText(SizeTypeUtility.INSTANCE.convertType(Integer.parseInt(type.getAlcoholType())));
+		alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(type.getSize())));
+		
 	}
 	
 	private OnItemClickListener listViewItemClickListener = new OnItemClickListener() {
@@ -41,7 +50,12 @@ public class TypePage extends Activity{
 				long arg3) {
 			Intent intent = new Intent(TypePage.this, ProductPage.class);
 			
-			
+			intent.putExtra("from", 2);
+			String s = type.getProducts().get((int) listView.getItemIdAtPosition(arg2));
+			intent.putExtra("name", type.getProducts()
+					.get((int) listView.getItemIdAtPosition(arg2)));
+			intent.putExtra("size", SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(type.getSize())));
+			startActivity(intent);
 		}
 	};
 

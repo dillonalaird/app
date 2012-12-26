@@ -81,6 +81,20 @@ public enum SizeTypeUtility {
 		return 0; // coun't find type
 	}
 	
+	public String convertSize(int size) {
+		for (Pair pair : sizeConversion)
+			if (Integer.parseInt(pair.getId()) == size)
+				return pair.getText();
+		return null;
+	}
+	
+	public String convertType(int type) {
+		for (Pair pair : typeConversion)
+			if (Integer.parseInt(pair.getId()) == type)
+				return pair.getText();
+		return null;
+	}
+	
 	public class Pair {
 		private String text;
 		private String id;

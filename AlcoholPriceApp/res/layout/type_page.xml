@@ -8,27 +8,44 @@
     android:color="#fff" >
     
     <LinearLayout
-	    android:orientation="horizontal"
+       	android:orientation="horizontal"
 	    android:weightSum="2"
 	    android:layout_width="fill_parent"
 	    android:layout_height="0dp" 
 	    android:layout_weight="1" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
 	    
-	</LinearLayout>
+    
+	    <LinearLayout
+		    android:orientation="vertical"
+		    android:weightSum="2"
+		    android:layout_width="0dp"
+		    android:layout_height="fill_parent" 
+		    android:layout_weight="1"
+		    android:layout_marginLeft="5dp" >
+	
+	        <TextView
+	            android:id="@+id/alcoholTypeText"
+	            android:layout_width="fill_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1"
+	            android:textSize="24dp" />
+	
+	        <TextView
+	            android:id="@+id/alcoholTypeSizeText"
+	            android:layout_width="fill_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="1"
+	            android:textSize="12dp"
+	            android:textColor="#545454" />
+		</LinearLayout>
+		
+	    <ImageView 
+            android:id="@+id/imageView1"
+        	android:layout_width="0dp"
+        	android:layout_height="fill_parent" 
+	    	android:layout_weight="1" 
+        	android:src="@drawable/ic_launcher" />
+	</LinearLayout>        
         
     <ListView
         android:id="@+id/typeProductListView"
