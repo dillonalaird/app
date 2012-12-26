@@ -23,6 +23,7 @@ public enum SizeTypeUtility {
 		try {
 			res = sizeTask.execute("GET", "SIZES").get();
 			JSONArray sizes = res.getData().getJSONArray("sizes");
+			sizeConversion.add(new Pair("Select Size of Alcohol", "0"));
 			parseData(sizeConversion, sizes);
 		} catch (Exception e) {
 			// this is bad cause this could be a number of things...
@@ -35,6 +36,7 @@ public enum SizeTypeUtility {
 		try {
 			res = typesTask.execute("GET", "TYPES").get();
 			JSONArray types = res.getData().getJSONArray("types");
+			typeConversion.add(new Pair("Select Type of Alcohol", "0"));
 			parseData(typeConversion, types);
 		} catch (Exception e) {
 			// same here
@@ -42,14 +44,10 @@ public enum SizeTypeUtility {
 	}
 	
 	private void parseData(List<Pair> list, JSONArray data) throws JSONException {
-		Log.d("SizeTypeUtility", "entered parseData");
 		for (int i = 0; i < data.length(); i++) {
-			Log.d("SizeTypeUtility", "entered parseData loop");
 			JSONObject dataField = data.getJSONObject(i);
 			String text = dataField.getString("text");
 			String id = dataField.getString("id");
-			Log.d("SizeTypeUtility", "text: " + text);
-			Log.d("SizeTypeUtility", "id: " + id);
 			list.add(new Pair(text, id));
 		}
 	}

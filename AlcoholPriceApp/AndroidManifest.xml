@@ -45,6 +45,14 @@
             </intent-filter>
         </activity>
         
+        <activity
+            android:name="com.android.alcoholpriceapp.pages.TypePage">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
     </application>
  <uses-permission 
      android:name="android.permission.INTERNET"> 

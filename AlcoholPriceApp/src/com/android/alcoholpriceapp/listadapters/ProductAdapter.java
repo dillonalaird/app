@@ -40,7 +40,7 @@ public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 	/**
 	 * pretty sure this is called when each row is created in the listView
 	 * 
-	 * The inflator takes the layout assigned to it and makes it fit the
+	 * The inflater takes the layout assigned to it and makes it fit the
 	 * space that it is filling (im pretty sure)
 	 */
 	@Override

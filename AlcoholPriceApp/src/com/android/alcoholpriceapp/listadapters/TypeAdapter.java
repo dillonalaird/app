@@ -15,7 +15,7 @@ import com.android.alcoholpriceapp.R;
 public class TypeAdapter extends ArrayAdapter<String> {
 	private Context context;
 	private int layoutResourceId;
-	private ArrayList<String> data = null;
+	private ArrayList<String> data;
 	
 	/**
 	 * Constructs a new TypeAdapter object. Takes the context, layout to use for each
@@ -32,6 +32,7 @@ public class TypeAdapter extends ArrayAdapter<String> {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
+		this.data = data;
 	}
 	
 	@Override

@@ -8,29 +8,26 @@
     android:color="#fff" >
     
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
 	    android:weightSum="2"
 	    android:layout_width="fill_parent"
 	    android:layout_height="0dp" 
 	    android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 	    
-        <LinearLayout
-		    xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:orientation="horizontal"
-		    android:weightSum="2"
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent" 
-		    android:layout_weight="1" >  
-	    </LinearLayout>
-	    
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:orientation="horizontal"
-		    android:layout_width="0dp"
-		    android:layout_height="fill_parent" 
-		    android:layout_weight="1" >
-	    </LinearLayout>
 	</LinearLayout>
         
     <ListView

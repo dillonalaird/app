@@ -31,7 +31,6 @@ public class Response {
 			JSONObject dataObj = new JSONObject(jsonStr);
 			String status = dataObj.getJSONObject("result").getString("status");
 			data = dataObj.getJSONObject("data");
-			
 			if (status.equals("200"))
 				this.success = true;
 			else

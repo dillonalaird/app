@@ -8,6 +8,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,13 +20,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Type;
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
-import com.android.alcoholpriceapp.util.Util;
+import com.android.alcoholpriceapp.util.SizeTypeUtility;
 
 /**
  * The browse page for the Alcohol Price Application. Allows the user to browse
@@ -71,24 +71,25 @@ public class BrowsePage extends Activity {
 	 * those items to the spinner.
 	 */
 	private void initSpinner() {
-		// Check http://developer.android.com/guide/topics/ui/controls/spinner.html
-		// for details on this method
-		ArrayAdapter<CharSequence> aAdapter = ArrayAdapter.createFromResource(this,
-				R.array.types_of_alcohol, android.R.layout.simple_spinner_item);
-		aAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		alcoholTypeSpinner.setAdapter(aAdapter);
-		alcoholTypeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		ArrayAdapter<String> tAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item,
+				SizeTypeUtility.INSTANCE.getTypeList());
+		tAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		alcoholTypeSpinner.setAdapter(tAdapter);
+		alcoholTypeSpinner.setOnItemSelectedListener(new TypeSpinnerActivity());
 
-		ArrayAdapter<CharSequence> sAdapter = ArrayAdapter.createFromResource(this,
-				R.array.size_of_alcohol, android.R.layout.simple_spinner_item);
-		aAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item,
+				SizeTypeUtility.INSTANCE.getSizeList());
+		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sizeSpinner.setAdapter(sAdapter);
-		sizeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
 	}
 
 	private OnClickListener onBrowseClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			Log.d("BrowsePage", "entered onClick");
 			if (checkInput(selectedType, selectedSize)) {
 				progressDialog = ProgressDialog.show(BrowsePage.this, "Please wait...",
 						"Retrieving data...", true, true);
@@ -96,10 +97,13 @@ public class BrowsePage extends Activity {
 				Response res = null;
 				final APICall browseTask = new APICall();
 				try {
-					res = browseTask.execute("GET", "TYPE", selectedType, selectedSize).get();
+					Log.d("onClick", selectedSize + " " + selectedType);
+					res = browseTask.execute("GET", "TYPE", selectedSize, selectedType).get();
+					Log.d("onClick", res.getData().toString());
 				} catch (Exception e) {
 					// not network error, this is an exception thrown by AsyncTask's execute method
 					// TODO: AsyncTask execute exception
+					Log.d("BrowsePage", "error on execute");
 				}
 				
 				progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -110,7 +114,7 @@ public class BrowsePage extends Activity {
 				});
 				
 				if (res.getSuccess()) {
-					Parcelable type = new Type(res.getData(), selectedType, selectedSize);
+					Parcelable type = new Type(res.getData(), selectedSize, selectedType);
 					Intent intent = new Intent(BrowsePage.this, TypePage.class);
 					intent.putExtra("Type", type);
 					progressDialog.cancel();
@@ -155,10 +159,10 @@ public class BrowsePage extends Activity {
 	 * @return
 	 */
 	private boolean checkInput(String type, String size) {
-		if (type == null) {
+		if (type.equals("0")) {
 			Toast.makeText(this, "Please select an alcohol type", Toast.LENGTH_SHORT).show();
 			return false;
-		} else if (size.equals("Select Size of Alcohol")) {
+		} else if (size.equals("0")) {
 			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
 			return false;
 		}
@@ -172,7 +176,7 @@ public class BrowsePage extends Activity {
     		// Converts the sizes to String representations of ints so the database
     		// can parse them easier
     		String size = parent.getItemAtPosition(pos).toString();
-    		selectedSize = Util.convertSize(size) + "";
+    		selectedSize = SizeTypeUtility.INSTANCE.convertSize(size) + "";
     	}
     	
     	public void onNothingSelected(AdapterView<?> parent) {
@@ -183,7 +187,8 @@ public class BrowsePage extends Activity {
     private class TypeSpinnerActivity extends Activity implements OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,
     			int pos, long id) {
-    		
+    		String type = parent.getItemAtPosition(pos).toString();
+    		selectedType = SizeTypeUtility.INSTANCE.convertType(type) + "";
     	}
     	
     	public void onNothingSelected(AdapterView<?> parent) {

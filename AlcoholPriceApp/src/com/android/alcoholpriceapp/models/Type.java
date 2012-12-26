@@ -17,7 +17,7 @@ import android.os.Parcelable;
  */
 public class Type implements Parcelable {
 	/** The type of alcohol. */
-	private String alcoholType;
+	private String type;
 	/** The size of the alcohol. */
 	private String size;
 	/** The List of products of the specified type and size. */
@@ -34,7 +34,7 @@ public class Type implements Parcelable {
 		this();
 		
 		in.readStringList(products);
-		alcoholType = in.readString();
+		type = in.readString();
 		size = in.readString();
 		
 	}
@@ -45,14 +45,14 @@ public class Type implements Parcelable {
 	 * 
 	 * @param productInfo
 	 * 			JSONArray containing the product info (checked by Response).
-	 * @param alcoholType
+	 * @param type
 	 * 			Type of the alcohol.
 	 * @param size
 	 * 			Size of the alcohol.
 	 */
-	public Type(JSONObject productInfo, String alcoholType, String size) {
+	public Type(JSONObject productInfo, String size, String type) {
 		this();
-		this.alcoholType = alcoholType;
+		this.type = type;
 		this.size = size;
 		
 		try {
@@ -73,7 +73,7 @@ public class Type implements Parcelable {
 	 */
 	
 	public String getAlcoholType() {
-		return alcoholType;
+		return type;
 	}
 	
 	public String getSize() {
@@ -88,8 +88,8 @@ public class Type implements Parcelable {
 	 * SETTER METHODS
 	 */
 	
-	public void setAlcoholType(String alcoholType) {
-		this.alcoholType = alcoholType;
+	public void setAlcoholType(String type) {
+		this.type = type;
 	}
 	
 	public void setSize(String size) {
@@ -102,7 +102,7 @@ public class Type implements Parcelable {
 	
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeStringList(products);
-		out.writeString(alcoholType);
+		out.writeString(type);
 		out.writeString(size);
 	}
 	

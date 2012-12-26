@@ -77,13 +77,9 @@ public class SearchPage extends Activity {
 		
 		SizeTypeUtility.INSTANCE.updateSizes();
 		SizeTypeUtility.INSTANCE.updateTypes(); // might as well?
-		for (String s : SizeTypeUtility.INSTANCE.getSizeList())
-			Log.d("sizeList", s);
 
 		findAllViewsById();
 		initSpinner();
-		// This is so we can grab the item currently selected in the spinner
-		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
 		
 		searchButton.setOnClickListener(onSearchClickListener);
 	}
@@ -103,21 +99,12 @@ public class SearchPage extends Activity {
 	 * those items to the spinner.
 	 */
 	private void initSpinner() {
-		// Check http://developer.android.com/guide/topics/ui/controls/spinner.html
-		// for details on this method
-//		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//				R.array.size_of_alcohol, android.R.layout.simple_spinner_item);
-		Log.d("SearchPage", "about to create new arrayadapter");
-		for (String s : SizeTypeUtility.INSTANCE.getSizeList())
-			Log.d("sizeList", s);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item,
 				SizeTypeUtility.INSTANCE.getSizeList());
-		Log.d("SearchPage", "about to setDropDownViewResource");
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		Log.d("SearchPage", "about to setAdapter");
 		sizeSpinner.setAdapter(adapter);
-		sizeSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
 	}
 	
 	/**
@@ -207,7 +194,7 @@ public class SearchPage extends Activity {
 		if (alcohol == null) {
 			Toast.makeText(this, "Please type in an alcohol product name", Toast.LENGTH_SHORT).show();
 			return false;
-		} else if (size.equals("Select Size of Alcohol")) {
+		} else if (size.equals("0")) {
 			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
 			return false;
 		}
@@ -225,7 +212,7 @@ public class SearchPage extends Activity {
     		// Converts the sizes to String representations of ints so the database
     		// can parse them easier
     		String size = parent.getItemAtPosition(pos).toString();
-    		selectedSize = Util.convertSize(size) + "";
+    		selectedSize = SizeTypeUtility.INSTANCE.convertSize(size) + "";
     	}
     	
     	public void onNothingSelected(AdapterView<?> parent) {
