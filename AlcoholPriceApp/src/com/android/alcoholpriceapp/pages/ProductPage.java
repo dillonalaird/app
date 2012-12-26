@@ -1,23 +1,29 @@
 package com.android.alcoholpriceapp.pages;
 
+import java.util.Locale;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.alcoholpriceapp.R;
-import com.android.alcoholpriceapp.R.id;
-import com.android.alcoholpriceapp.R.layout;
-import com.android.alcoholpriceapp.R.menu;
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
 import com.android.alcoholpriceapp.models.PriceInfo;
 import com.android.alcoholpriceapp.models.Product;
+import com.android.alcoholpriceapp.network.APICall;
+import com.android.alcoholpriceapp.network.Response;
+import com.android.alcoholpriceapp.util.GPSUtility;
+import com.android.alcoholpriceapp.util.SizeTypeUtility;
 
 /**
  * Product page is the activity that shows different prices for the particular alcohol/size
@@ -42,15 +48,59 @@ public class ProductPage extends Activity {
         setContentView(R.layout.product_page);
         
         Bundle bundle = getIntent().getExtras();
-        product = bundle.getParcelable("Product");
         
-        ProductAdapter adapter = new ProductAdapter(this, R.layout.product_row, product.getProductInfos());
+        int from = bundle.getInt("from");
         
-        //String[] testArray = {"troy", "Dillon", "Shane", "Raj"};
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testArray);
+        switch(from) {
+        	case 1: //from search page
+        		product = bundle.getParcelable("Product");
+        		break;
+        	case 2: //from store page
+        		//get name and size from intent
+        		String alcohol = bundle.getString("name");
+        		String size = Integer.toString(SizeTypeUtility.INSTANCE.convertSize(bundle.getString("size")));
+        		Response res = null;
+				final APICall searchTask = new APICall();
+				try {
+			    	res = searchTask.execute("GET", "PRODUCT", 
+			    			alcohol.toLowerCase().trim(), 
+			    			size).get();
+				} catch (Exception e) {
+					// not network error, this is an exception thrown by AsyncTask's execute method
+					// TODO: AsyncTask execute exception
+				} 
+				if (res.getSuccess()) {
+					GPSUtility gps = new GPSUtility(ProductPage.this);
+					Location location = gps.promptForGPS();
+		    		if (location != null) {
+			    		product = new Product(res.getData(), 
+			    				alcohol.toLowerCase(Locale.ENGLISH).trim(), 
+			    				size, location);
+		    		} else {
+		    			AlertDialog.Builder builder = new AlertDialog.Builder(ProductPage.this);
+			    		builder
+			    			.setTitle("Sorry!")
+			    			.setMessage("No fucking idea.")
+			    			.setPositiveButton("Okay", null)
+			    			.show();
+		    		}
+		    	} else {
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(ProductPage.this);
+		    		builder
+		    			.setTitle("Sorry!")
+		    			.setMessage("We could not find that alcohol in our database.")
+		    			.setPositiveButton("Okay", null)
+		    			.show();
+		    	}
+        		break;
+        }
         
-        listView = (ListView) findViewById(R.id.itemsListView);
-        listView.setAdapter(adapter);
+        if(product.getProductInfos() != null) {
+	        ProductAdapter adapter = new ProductAdapter(this, R.layout.product_row, product.getProductInfos());
+	        
+	        listView = (ListView) findViewById(R.id.itemsListView);
+	        listView.setAdapter(adapter);
+        }
         
         listView.setOnItemClickListener(listviewItemClickListener);
         

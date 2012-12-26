@@ -10,8 +10,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.listadapters.ProductAdapter;
@@ -25,6 +28,7 @@ public class StorePage extends Activity {
 	
 	private ListView listView;
 	private ProgressDialog progressDialog;
+	Store store = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,7 @@ public class StorePage extends Activity {
     		GPSUtility gps = new GPSUtility(StorePage.this);
     		Location location = gps.promptForGPS();
     		if (location != null) {
-	    		Store store = new Store(location, res.getData());
+	    		store = new Store(location, res.getData());
 	    		
 	            StoreAdapter adapter = new StoreAdapter(this, R.layout.product_row, store.getPriceInfos());
 	            
@@ -79,6 +83,8 @@ public class StorePage extends Activity {
 	            storeNameText.setText(store.getName());	
 	            storeAddressText.setText(store.getAddress());
 	            distText.setText(Double.toString(store.getDist()) + " mi");
+	            
+	            listView.setOnItemClickListener(listviewItemClickListener);
     		} else {
     			AlertDialog.Builder builder = new AlertDialog.Builder(StorePage.this);
 	    		builder
@@ -101,6 +107,21 @@ public class StorePage extends Activity {
     	}
     	
     }
+	
+    private OnItemClickListener listviewItemClickListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			Intent intent = new Intent(StorePage.this, ProductPage.class);
+			
+			//passing ID to do search on other side
+			intent.putExtra("from", 2);
+			intent.putExtra("name", store.getPriceInfos()
+					.get((int)listView.getItemIdAtPosition(arg2)).getAlcName());
+			intent.putExtra("size", store.getPriceInfos()
+					.get((int)listView.getItemIdAtPosition(arg2)).getAlcSize());
+			startActivity(intent);
+		} 
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
