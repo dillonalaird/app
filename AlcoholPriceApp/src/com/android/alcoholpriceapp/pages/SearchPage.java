@@ -166,6 +166,7 @@ public class SearchPage extends Activity {
 			    		
 			    		Intent intent = new Intent(SearchPage.this, ProductPage.class);
 			    		intent.putExtra("Product", product);
+			    		intent.putExtra("from", 1);
 						Log.v("debug", "5");
 			    		progressDialog.cancel(); //so when you hit back it isnt there
 			    		startActivity(intent);
