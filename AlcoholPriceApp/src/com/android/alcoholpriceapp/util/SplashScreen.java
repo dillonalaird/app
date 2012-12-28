@@ -1,6 +1,5 @@
 package com.android.alcoholpriceapp.util;
 
-import android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +11,11 @@ public class SplashScreen extends Activity {
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash_layout);
+		setContentView(0x7f030004);
 		
 		try {
-			Thread.sleep(2000); // sleep 2 sec
+			(new Thread(new SetUp())).start(); // execute SetUp in another thread
+			Thread.sleep(2000); // sleep 2 sec in this thread
 			Intent intent = new Intent(this, SearchPage.class);
 			startActivity(intent);
 		} catch(Exception e) {
@@ -24,9 +24,6 @@ public class SplashScreen extends Activity {
 	}
 	
 	public class SetUp implements Runnable {
-		Thread t;
-		
-		
 		@Override
 		public void run() {
 			SizeTypeUtility.INSTANCE.setContext(SplashScreen.this);

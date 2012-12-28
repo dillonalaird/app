@@ -13,11 +13,19 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar" >
         
-        <activity 
-            android:name="com.android.alcoholpriceapp.pages.SearchPage">
+        <activity
+            android:name="com.android.alcoholpriceapp.util.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity 
+            android:name="com.android.alcoholpriceapp.pages.SearchPage">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
