@@ -7,19 +7,47 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import android.content.Context;
 
 import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 
+/**
+ * SizeTypeUtility represents a utility for updating the size and type lists
+ * as well as providing a way to convert sizes and types to their corresponding
+ * ID's. SizeTypeUtility uses the singleton design pattern so only once instance
+ * exists during runtime.
+ */
 public enum SizeTypeUtility {
 	INSTANCE;
+	/** Holds the list of sizes as well as their corresponding ID's. */
 	private List<Pair> sizeConversion = new ArrayList<Pair>();
+	/** Holds the list of types as well as their corresponding ID's. */
 	private List<Pair> typeConversion = new ArrayList<Pair>();
+	/** Holds the Context from where SizeTypeUtility is being used. */
+	private Context context;
 	
+	/**
+	 * This method is so updateSizes and updateTypes can use APICall correctly.
+	 * Makes it so the AlertDialog pops up in the correct context when using
+	 * APICall. This should be changed if you use updateSizes or updateTypes
+	 * in different activities so it launches AlertDialog in the correct
+	 * Activity.
+	 * 
+	 * @param context
+	 * 			The Context in which SizeTypeUtility is being used.
+	 */
+	public void setContext(Context context) {
+		this.context = context;
+	}
+	
+	/**
+	 * Grabs the size list and their corresponding ID's from the web and stores
+	 * them.
+	 */
 	public void updateSizes() {
 		Response res = null;
-		APICall sizeTask = new APICall();
+		APICall sizeTask = new APICall(context);
 		try {
 			res = sizeTask.execute("GET", "SIZES").get();
 			JSONArray sizes = res.getData().getJSONArray("sizes");
@@ -30,9 +58,13 @@ public enum SizeTypeUtility {
 		}
 	}
 	
+	/**
+	 * Grabs the type list and their corresponding ID's from the web and stores
+	 * them.
+	 */
 	public void updateTypes() {
 		Response res = null;
-		APICall typesTask = new APICall();
+		APICall typesTask = new APICall(context);
 		try {
 			res = typesTask.execute("GET", "TYPES").get();
 			JSONArray types = res.getData().getJSONArray("types");
@@ -43,6 +75,15 @@ public enum SizeTypeUtility {
 		}
 	}
 	
+	/**
+	 * Private method used to parse a JSON string for text and id fields.
+	 * 
+	 * @param list
+	 * 			The list to store text and id fields in.
+	 * @param data
+	 * 			The JSONArray.
+	 * @throws JSONException
+	 */
 	private void parseData(List<Pair> list, JSONArray data) throws JSONException {
 		for (int i = 0; i < data.length(); i++) {
 			JSONObject dataField = data.getJSONObject(i);
@@ -95,6 +136,10 @@ public enum SizeTypeUtility {
 		return null;
 	}
 	
+	/**
+	 * Pair represents a text and its corresponding id. For example text could
+	 * be "6 pack" and id could be "2".
+	 */
 	public class Pair {
 		private String text;
 		private String id;

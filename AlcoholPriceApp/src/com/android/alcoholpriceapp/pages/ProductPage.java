@@ -60,7 +60,7 @@ public class ProductPage extends Activity {
         		String alcohol = bundle.getString("name");
         		String size = Integer.toString(SizeTypeUtility.INSTANCE.convertSize(bundle.getString("size")));
         		Response res = null;
-				final APICall searchTask = new APICall();
+				final APICall searchTask = new APICall(ProductPage.this);
 				try {
 			    	res = searchTask.execute("GET", "PRODUCT", 
 			    			alcohol.toLowerCase().trim(), 

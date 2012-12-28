@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.alcoholpriceapp.CustomOnItemSelectedListener;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.menu.MenuControl;
 import com.android.alcoholpriceapp.models.Product;
@@ -32,7 +31,6 @@ import com.android.alcoholpriceapp.network.APICall;
 import com.android.alcoholpriceapp.network.Response;
 import com.android.alcoholpriceapp.util.GPSUtility;
 import com.android.alcoholpriceapp.util.SizeTypeUtility;
-import com.android.alcoholpriceapp.util.Util;
 
 /**
  * The search page for the Alcohol Price Application. Allows the user to search
@@ -75,9 +73,11 @@ public class SearchPage extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		
-		SizeTypeUtility.INSTANCE.updateSizes();
-		SizeTypeUtility.INSTANCE.updateTypes(); // might as well?
-
+		// This is so if there's a connection error with updateSizes or
+		// updateTypes, an AlertDialog box will pop up in this instance
+		// of SearchPage
+		SizeTypeUtility.INSTANCE.setContext(this);
+		
 		findAllViewsById();
 		initSpinner();
 		
@@ -123,7 +123,7 @@ public class SearchPage extends Activity {
 		    	
 		    	//create a response object
 				Response res = null;
-				final APICall searchTask = new APICall();
+				final APICall searchTask = new APICall(SearchPage.this);
 				try {
 			    	res = searchTask.execute("GET", "PRODUCT", 
 			    			alcohol.toLowerCase().trim(), 

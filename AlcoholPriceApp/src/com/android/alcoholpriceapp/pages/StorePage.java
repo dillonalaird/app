@@ -50,7 +50,7 @@ public class StorePage extends Activity {
     	
     	//create a response object
 		Response res = null;
-		final APICall searchTask = new APICall();
+		final APICall searchTask = new APICall(StorePage.this);
 		try {
 	    	res = searchTask.execute("GET", "STORE", Integer.toString(id)).get();
 		} catch (Exception e) {

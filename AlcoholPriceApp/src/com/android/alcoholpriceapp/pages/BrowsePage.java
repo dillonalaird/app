@@ -95,7 +95,7 @@ public class BrowsePage extends Activity {
 						"Retrieving data...", true, true);
 				
 				Response res = null;
-				final APICall browseTask = new APICall();
+				final APICall browseTask = new APICall(BrowsePage.this);
 				try {
 					Log.d("onClick", selectedSize + " " + selectedType);
 					res = browseTask.execute("GET", "TYPE", selectedSize, selectedType).get();
