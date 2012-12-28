@@ -3,33 +3,32 @@ package com.android.alcoholpriceapp.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
+import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.pages.SearchPage;
 
+/**
+ * Displays an initial splash screen before starting the main SearchPage
+ * Activity.
+ */
 public class SplashScreen extends Activity {
 	
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(0x7f030004);
+		setContentView(R.layout.splash_layout);
 		
-		try {
-			(new Thread(new SetUp())).start(); // execute SetUp in another thread
-			Thread.sleep(2000); // sleep 2 sec in this thread
-			Intent intent = new Intent(this, SearchPage.class);
-			startActivity(intent);
-		} catch(Exception e) {
-			
-		}
-	}
-	
-	public class SetUp implements Runnable {
-		@Override
-		public void run() {
-			SizeTypeUtility.INSTANCE.setContext(SplashScreen.this);
-			SizeTypeUtility.INSTANCE.updateSizes();
-			SizeTypeUtility.INSTANCE.updateTypes();
-		}
-		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Updates the size and type lists before it launches SearchPage
+				SizeTypeUtility.INSTANCE.setContext(SplashScreen.this);
+				SizeTypeUtility.INSTANCE.updateSizes();
+				SizeTypeUtility.INSTANCE.updateTypes();
+				startActivity(new Intent(SplashScreen.this, SearchPage.class));
+				finish();
+			}
+		}, 3000); // waits 3000 ms or 3 sec
 	}
 }
