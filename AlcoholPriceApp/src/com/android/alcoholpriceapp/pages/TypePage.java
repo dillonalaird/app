@@ -29,7 +29,8 @@ public class TypePage extends Activity{
 		Bundle bundle = getIntent().getExtras();
 		type = bundle.getParcelable("Type");
 		
-		TypeAdapter adapter = new TypeAdapter(this, R.layout.type_row, type.getProducts());
+		TypeAdapter adapter = new TypeAdapter(this, R.layout.type_row, 
+				type.getProducts());
 		
 		listView = (ListView) findViewById(R.id.typeProductListView);
 		listView.setAdapter(adapter);
@@ -39,22 +40,27 @@ public class TypePage extends Activity{
 		TextView alcoholTypeText = (TextView) findViewById(R.id.alcoholTypeText);
 		TextView alcoholSizeText = (TextView) findViewById(R.id.alcoholTypeSizeText);
 		
-		alcoholTypeText.setText(SizeTypeUtility.INSTANCE.convertType(Integer.parseInt(type.getAlcoholType())));
-		alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(type.getSize())));
+		alcoholTypeText.setText(SizeTypeUtility.INSTANCE.convertType(
+				Integer.parseInt(type.getAlcoholType())));
+		alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(
+				Integer.parseInt(type.getSize())));
 		
 	}
 	
-	private OnItemClickListener listViewItemClickListener = new OnItemClickListener() {
+	private OnItemClickListener listViewItemClickListener = 
+			new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			Intent intent = new Intent(TypePage.this, ProductPage.class);
 			
 			intent.putExtra("from", 2);
-			String s = type.getProducts().get((int) listView.getItemIdAtPosition(arg2));
+			String s = type.getProducts().get((int) 
+					listView.getItemIdAtPosition(arg2));
 			intent.putExtra("name", type.getProducts()
 					.get((int) listView.getItemIdAtPosition(arg2)));
-			intent.putExtra("size", SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(type.getSize())));
+			intent.putExtra("size", SizeTypeUtility.INSTANCE
+					.convertSize(Integer.parseInt(type.getSize())));
 			startActivity(intent);
 		}
 	};

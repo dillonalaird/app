@@ -36,7 +36,7 @@ public enum SizeTypeUtility {
 	 * Activity.
 	 * 
 	 * @param context
-	 * 			The Context in which SizeTypeUtility is being used.
+	 * 		The Context in which SizeTypeUtility is being used.
 	 */
 	public void setContext(Context context) {
 		this.context = context;
@@ -80,9 +80,9 @@ public enum SizeTypeUtility {
 	 * Private method used to parse a JSON string for text and id fields.
 	 * 
 	 * @param list
-	 * 			The list to store text and id fields in.
+	 * 		The list to store text and id fields in.
 	 * @param data
-	 * 			The JSONArray.
+	 * 		The JSONArray.
 	 * @throws JSONException
 	 */
 	private void parseData(List<Pair> list, JSONArray data) throws JSONException {

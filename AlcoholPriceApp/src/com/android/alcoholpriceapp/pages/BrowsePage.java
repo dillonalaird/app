@@ -39,8 +39,13 @@ public class BrowsePage extends Activity {
 	private Spinner alcoholTypeSpinner;
 	/** Browse button that initiates the browse process. */
 	private Button browseButton;
+	/** The size of the alcohol the user has selected. */
 	private String selectedSize;
+	/** The type of the alcohol the user has selected. */
 	private String selectedType;
+	/** A waiting dialog that pops up to notify the user the app is currently
+	 * conducting the requested search.
+	 */
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -91,17 +96,19 @@ public class BrowsePage extends Activity {
 		public void onClick(View v) {
 			Log.d("BrowsePage", "entered onClick");
 			if (checkInput(selectedType, selectedSize)) {
-				progressDialog = ProgressDialog.show(BrowsePage.this, "Please wait...",
-						"Retrieving data...", true, true);
+				progressDialog = ProgressDialog.show(BrowsePage.this, 
+						"Please wait...", "Retrieving data...", true, true);
 				
 				Response res = null;
 				final APICall browseTask = new APICall(BrowsePage.this);
 				try {
 					Log.d("onClick", selectedSize + " " + selectedType);
-					res = browseTask.execute("GET", "TYPE", selectedSize, selectedType).get();
+					res = browseTask.execute("GET", "TYPE", selectedSize, 
+							selectedType).get();
 					Log.d("onClick", res.getData().toString());
 				} catch (Exception e) {
-					// not network error, this is an exception thrown by AsyncTask's execute method
+					// not network error, this is an exception thrown by 
+					// AsyncTask's execute method
 					// TODO: AsyncTask execute exception
 					Log.d("BrowsePage", "error on execute");
 				}
@@ -114,10 +121,11 @@ public class BrowsePage extends Activity {
 				});
 				
 				if (res.getSuccess()) {
-					Parcelable type = new Type(res.getData(), selectedSize, selectedType);
+					Parcelable type = new Type(res.getData(), selectedSize, 
+							selectedType);
 					Intent intent = new Intent(BrowsePage.this, TypePage.class);
 					intent.putExtra("Type", type);
-					progressDialog.cancel();
+					progressDialog.cancel(); //so when you hit back it isn't there
 					startActivity(intent);
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(BrowsePage.this);
@@ -150,31 +158,40 @@ public class BrowsePage extends Activity {
     }
     
 	/**
-	 * Checks the input to make sure the user has actually put in the product name
-	 * and size data.
+	 * Checks the input to make sure the user has actually put in the product 
+	 * name and size data.
+	 * 
 	 * @param alcohol
-	 * 			The alcohol product name the user is trying to search for.
+	 * 		The alcohol product name the user is trying to search for
 	 * @param size
-	 * 			The size of the alcohol the user is trying to search for.
-	 * @return
+	 * 		The size of the alcohol the user is trying to search for
+	 * @return true if the user has inputed an alcohol type and size, and 
+	 * false otherwise
 	 */
 	private boolean checkInput(String type, String size) {
 		if (type.equals("0")) {
-			Toast.makeText(this, "Please select an alcohol type", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please select an alcohol type", 
+					Toast.LENGTH_SHORT).show();
 			return false;
 		} else if (size.equals("0")) {
-			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please select an alcohol size", 
+					Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;
 	}
     
-    private class SizeSpinnerActivity extends Activity implements OnItemSelectedListener {
+    /**
+     * SizeSpinnerActivity allows us to set selectedSize to the current item 
+     * selected on the sizeSpinner.
+     */
+    private class SizeSpinnerActivity extends Activity implements 
+    				OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,
     			int pos, long id) {
     		
-    		// Converts the sizes to String representations of ints so the database
-    		// can parse them easier
+    		// Converts the sizes to String representations of ints so the 
+    		// database can parse them easier
     		String size = parent.getItemAtPosition(pos).toString();
     		selectedSize = SizeTypeUtility.INSTANCE.convertSize(size) + "";
     	}
@@ -184,7 +201,8 @@ public class BrowsePage extends Activity {
     	}
     }
     
-    private class TypeSpinnerActivity extends Activity implements OnItemSelectedListener {
+    private class TypeSpinnerActivity extends Activity implements 
+    				OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,
     			int pos, long id) {
     		String type = parent.getItemAtPosition(pos).toString();

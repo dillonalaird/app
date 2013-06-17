@@ -26,11 +26,9 @@ import com.android.alcoholpriceapp.util.GPSUtility;
 import com.android.alcoholpriceapp.util.SizeTypeUtility;
 
 /**
- * Product page is the activity that shows different prices for the particular alcohol/size
- * combination. The intent that creates it has a parcelable Product object passed into it 
- * from which ProductPage created it's layout.
- * 
- * @author Troy Cosentino
+ * Product page is the activity that shows different prices for the particular 
+ * alcohol/size combination. The intent that creates it has a parcelable 
+ * Product object passed into it from which ProductPage created it's layout.
  */
 public class ProductPage extends Activity {
 	Product product = null;
@@ -38,9 +36,10 @@ public class ProductPage extends Activity {
 	private ListView listView;
 
 	/**
-	 * Called when the Activity is created. Creates the Product object from the parcel 
-	 * passed through the intent. Then creates the adapter and populates the list view.
-	 * Finally, sets a listener for when an item in the listview is clicked.
+	 * Called when the Activity is created. Creates the Product object from the
+	 * parcel passed through the intent. Then creates the adapter and populates
+	 * the list view. Finally, sets a listener for when an item in the listview 
+	 * is clicked.
 	 */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,8 @@ public class ProductPage extends Activity {
         
         int from = bundle.getInt("from");
         
+        // We have two different cases to handle here depending on whether or
+        // not the user came from the search page or the store page.
         switch(from) {
         	case 1: //from search page
         		product = bundle.getParcelable("Product");
@@ -58,7 +59,8 @@ public class ProductPage extends Activity {
         	case 2: //from store page
         		//get name and size from intent
         		String alcohol = bundle.getString("name");
-        		String size = Integer.toString(SizeTypeUtility.INSTANCE.convertSize(bundle.getString("size")));
+        		String size = Integer.toString(SizeTypeUtility.INSTANCE
+        				.convertSize(bundle.getString("size")));
         		Response res = null;
 				final APICall searchTask = new APICall(ProductPage.this);
 				try {
@@ -66,9 +68,11 @@ public class ProductPage extends Activity {
 			    			alcohol.toLowerCase().trim(), 
 			    			size).get();
 				} catch (Exception e) {
-					// not network error, this is an exception thrown by AsyncTask's execute method
+					// not network error, this is an exception thrown by 
+					// AsyncTask's execute method
 					// TODO: AsyncTask execute exception
 				} 
+				
 				if (res.getSuccess()) {
 					GPSUtility gps = new GPSUtility(ProductPage.this);
 					Location location = gps.promptForGPS();
@@ -77,7 +81,8 @@ public class ProductPage extends Activity {
 			    				alcohol.toLowerCase(Locale.ENGLISH).trim(), 
 			    				size, location);
 		    		} else {
-		    			AlertDialog.Builder builder = new AlertDialog.Builder(ProductPage.this);
+		    			AlertDialog.Builder builder = new AlertDialog.Builder(
+		    					ProductPage.this);
 			    		builder
 			    			.setTitle("Sorry!")
 			    			.setMessage("No fucking idea.")
@@ -85,7 +90,8 @@ public class ProductPage extends Activity {
 			    			.show();
 		    		}
 		    	} else {
-		    		AlertDialog.Builder builder = new AlertDialog.Builder(ProductPage.this);
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(
+		    				ProductPage.this);
 		    		builder
 		    			.setTitle("Sorry!")
 		    			.setMessage("We could not find that alcohol in our database.")
@@ -96,7 +102,8 @@ public class ProductPage extends Activity {
         }
         
         if(product.getProductInfos() != null) {
-	        ProductAdapter adapter = new ProductAdapter(this, R.layout.product_row, product.getProductInfos());
+	        ProductAdapter adapter = new ProductAdapter(this, 
+	        		R.layout.product_row, product.getProductInfos());
 	        
 	        listView = (ListView) findViewById(R.id.itemsListView);
 	        listView.setAdapter(adapter);
@@ -108,16 +115,19 @@ public class ProductPage extends Activity {
         TextView alcoholSizeText = (TextView) findViewById(R.id.alcoholSizeText);
         
         alcoholNameText.setText(product.getProductName());
-        alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(Integer.parseInt(product.getSize())));
+        alcoholSizeText.setText(SizeTypeUtility.INSTANCE.convertSize(Integer
+        		.parseInt(product.getSize())));
     }
     
     /**
-     * The Listener for when an item is clicked. Currently a dummy function that passes 
-     * it onto the store page. 
+     * The Listener for when an item is clicked. Currently a dummy function that
+     * passes it onto the store page. 
      */
-    private OnItemClickListener listviewItemClickListener = new OnItemClickListener() {
+    private OnItemClickListener listviewItemClickListener = 
+    		new OnItemClickListener() {
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, 
+				long arg3) {
 			Intent intent = new Intent(ProductPage.this, StorePage.class);
 			
 			//passing ID to do search on other side

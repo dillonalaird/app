@@ -5,7 +5,8 @@ public class Util {
 	/**
 	 * This function takes the String format of size and turns it into an integer
 	 * 
-	 * @param size in String format
+	 * @param size 
+	 * 		The size in String format
 	 * @return integer format of the size
 	 */
 	public static int convertSize(String size) {
@@ -31,7 +32,8 @@ public class Util {
 	
 	/**
 	 * This function takes the integer format of size and turns it into a String
-	 * @param size in integer format
+	 * @param size 
+	 * 		The size in integer format
 	 * @return String format of size
 	 */
 	public static String convertSize(int size) {

@@ -189,13 +189,13 @@ public class GPSTracker extends Service implements LocationListener {
 	     * returns the result in miles rounded to one digit after the decimal place.
 	     * 
 	     * @param lat1
-	     * 			Latitude of first coordinate.
+	     * 		Latitude of first coordinate.
 	     * @param long1
-	     * 			Longitude of first coordinate.
+	     * 		Longitude of first coordinate.
 	     * @param lat2
-	     * 			Latitude of second coordinate.
+	     * 		Latitude of second coordinate.
 	     * @param long2
-	     * 			Longitude of second coordinate.
+	     * 		Longitude of second coordinate.
 	     * @return the distance in miles between the two latitude longitude points.
 	     */
 	    public static double calculateGPSDistance(double lat1, double long1, double lat2, double long2) {
@@ -208,9 +208,9 @@ public class GPSTracker extends Service implements LocationListener {
 	     * Rounds double to a specified number of places after the decimal.
 	     * 
 	     * @param value
-	     * 			Value being rounded.
+	     * 		Value being rounded.
 	     * @param places
-	     * 			Places after the decimal to round to.
+	     * 		Places after the decimal to round to.
 	     * @return value rounded to the specified number of places after the decimal.
 	     */
 	    private static double round(double value, int places) {

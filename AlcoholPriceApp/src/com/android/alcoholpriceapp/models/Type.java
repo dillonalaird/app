@@ -44,11 +44,11 @@ public class Type implements Parcelable {
 	 * a list of products. Also takes the alcohol type and size.
 	 * 
 	 * @param productInfo
-	 * 			JSONArray containing the product info (checked by Response).
+	 * 		JSONArray containing the product info (checked by Response).
 	 * @param type
-	 * 			Type of the alcohol.
+	 * 		Type of the alcohol.
 	 * @param size
-	 * 			Size of the alcohol.
+	 * 		Size of the alcohol.
 	 */
 	public Type(JSONObject productInfo, String size, String type) {
 		this();

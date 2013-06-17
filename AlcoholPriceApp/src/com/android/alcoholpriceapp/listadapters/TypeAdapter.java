@@ -18,17 +18,18 @@ public class TypeAdapter extends ArrayAdapter<String> {
 	private ArrayList<String> data;
 	
 	/**
-	 * Constructs a new TypeAdapter object. Takes the context, layout to use for each
-	 * row, and an array list of data to put into the rows.
+	 * Constructs a new TypeAdapter object. Takes the context, layout to use 
+	 * for each row, and an array list of data to put into the rows.
 	 * 
 	 * @param context
-	 * 			The context that the list view will be in.
+	 * 		The context that the list view will be in.
 	 * @param layoutResourceId
-	 * 			The layout to apply to each row.
+	 * 		The layout to apply to each row.
 	 * @param data
-	 * 			A list of data to fill in the rows with.
+	 * 		A list of data to fill in the rows with.
 	 */
-	public TypeAdapter(Context context, int layoutResourceId, ArrayList<String> data) {
+	public TypeAdapter(Context context, int layoutResourceId, 
+			ArrayList<String> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;

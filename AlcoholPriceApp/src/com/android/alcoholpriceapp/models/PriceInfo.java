@@ -7,7 +7,6 @@ import android.os.Parcelable;
  * ProductInfo holds important information about a certain product such as the
  * store it's held at, the price of the product at that store, and the distance
  * the store is from the users current GPS location.
- * 
  */
 public class PriceInfo implements Parcelable {
 	/** Used to do a store search in the database. */
@@ -26,13 +25,13 @@ public class PriceInfo implements Parcelable {
 	 * Used in Product object to make list of PriceInfos
 	 * 
 	 * @param storeID
-	 * 			ID of the store (for use with SQL database)
+	 * 		ID of the store (for use with SQL database)
 	 * @param storeName
-	 * 			Name of the store that the price corresponds to
+	 * 		Name of the store that the price corresponds to
 	 * @param price
-	 * 			Price of the product at this store
+	 * 		Price of the product at this store
 	 * @param dist
-	 * 			Distance between the phone and this store
+	 * 		Distance between the phone and this store
 	 */
 	public PriceInfo(int storeID, String storeName, double price, double dist) {
 		this.storeID = storeID;
@@ -53,8 +52,8 @@ public class PriceInfo implements Parcelable {
 		this.price = price;
 		
 		storeID = -1;
-		storeName = null;
 		dist = -1;
+		storeName = null;
 	}
 
 	/**
@@ -62,18 +61,17 @@ public class PriceInfo implements Parcelable {
 	 * data is put into a parcel is the order that it must be taken out.
 	 * 
 	 * @param in
-	 * 			The parcel to create the object from
+	 * 		The parcel to create the object from
 	 */
 	private PriceInfo(Parcel in) {
 		//read data back in same order
-		
-		storeID = in.readInt();
-		dist = in.readDouble();
-		price = in.readDouble();
+		storeID   = in.readInt();
+		dist      = in.readDouble();
+		price     = in.readDouble();
 		storeName = in.readString();
-		alcID = in.readInt();
-		alcName = in.readString();
-		alcSize = in.readString();
+		alcID     = in.readInt();
+		alcName   = in.readString();
+		alcSize   = in.readString();
 	}	
 	
 	/*
@@ -109,9 +107,11 @@ public class PriceInfo implements Parcelable {
 	}
 	
 	/**
-	 * This function takes the String format of size and turns it into an integer
+	 * This function takes the String format of size and turns it into an 
+	 * integer
 	 * 
-	 * @param size in String format
+	 * @param size 
+	 * 		The size in String format
 	 * @return integer format of the size
 	 */
 	public static int convertSize(String size) {
@@ -137,7 +137,9 @@ public class PriceInfo implements Parcelable {
 	
 	/**
 	 * This function takes the integer format of size and turns it into a String
-	 * @param size in integer format
+	 * 
+	 * @param size 
+	 * 		The size in integer format
 	 * @return String format of size
 	 */
 	public static String convertSize(int size) {
@@ -201,7 +203,8 @@ public class PriceInfo implements Parcelable {
 	 * Parcelable methods
 	 */
 	
-	public static final Parcelable.Creator<PriceInfo> CREATOR = new Parcelable.Creator<PriceInfo>() {
+	public static final Parcelable.Creator<PriceInfo> CREATOR = 
+			new Parcelable.Creator<PriceInfo>() {
 		public PriceInfo createFromParcel(Parcel in) {
 			//we just need to read each field back from the parcel
 			return new PriceInfo(in);

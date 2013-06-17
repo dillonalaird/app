@@ -19,9 +19,9 @@ public class MenuControl {
 	 * activity.
 	 * 
 	 * @param item
-	 * 			The menu item corresponding to a certain activity.
+	 * 		The menu item corresponding to a certain activity.
 	 * @param current
-	 * 			The current activity running when the menu item is selected.
+	 * 		The current activity running when the menu item is selected.
 	 * @return true if the activity has been launched.
 	 */
 	public static boolean selectMenuItem(MenuItem item, Activity current) {
@@ -41,9 +41,9 @@ public class MenuControl {
 	 * Launches an activity from a current activity.
 	 * 
 	 * @param current
-	 * 			The current activity.
+	 * 		The current activity.
 	 * @param target
-	 * 			The target activity being launched.
+	 * 		The target activity being launched.
 	 */
     private static void launchActivity(Activity current, Class<?> target) {
     	Intent intent = new Intent(current, target);

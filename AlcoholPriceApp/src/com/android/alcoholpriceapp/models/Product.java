@@ -43,7 +43,8 @@ public class Product implements Parcelable {
 	 * Constructor taking in a parcel. The order that data is put into the parcel
 	 * is the order that data needs to be taken back out
 	 * 
-	 * @param in - the parcel to create the object from
+	 * @param in
+	 * 		The parcel to create the object from
 	 */
 	private Product(Parcel in) {
 		this();
@@ -60,15 +61,16 @@ public class Product implements Parcelable {
 	 * as well as the current location.
 	 * 
 	 * @param priceInfo
-	 *			JSON array containing price info (checked by Response).
+	 *		JSON array containing price info (checked by Response)
 	 * @param productName
-	 * 			Name of the alcohol.
+	 * 		Name of the alcohol
 	 * @param size        
-	 * 			Size of the alcohol.
+	 * 		Size of the alcohol
 	 * @param location    
-	 * 			Current location of the phone.
+	 * 		Current location of the phone
 	 */
-	public Product(JSONObject priceInfo, String productName, String size, Location location) {
+	public Product(JSONObject priceInfo, String productName, String size, 
+			Location location) {
 		this();
 		this.location = location;
 		this.productName = productName;
@@ -90,9 +92,9 @@ public class Product implements Parcelable {
 	 * price, store_gps} a JSONException is thrown.
 	 * 
 	 * @param dataObj
-	 * 			The JSONObject containing a data field.
+	 * 		The JSONObject containing a data field.
 	 * @throws JSONException
-	 * 			If it can't find the data field, or any of data's fields.
+	 * 		If it can't find the data field, or any of data's fields.
 	 */
 	private void parseData(JSONObject dataObj) throws JSONException {
 		for (int i = 0; i < dataObj.getJSONArray("prices").length(); i++) {

@@ -14,7 +14,8 @@ import android.util.Log;
 public class Response {
 	/** The data contained in the JSON response. */
 	private JSONObject data;
-	/** The status of the response, basically whether or not it contained any
+	/** 
+	 * The status of the response, basically whether or not it contained any
 	 * data.
 	 */
 	private boolean success;
@@ -24,7 +25,7 @@ public class Response {
 	 * response and extracts the data field.
 	 * 
 	 * @param jsonStr
-	 * 			The JSON String containing the status and the data field.
+	 * 		The JSON String containing the status and the data field.
 	 */
 	public Response(String jsonStr) {
 		try {
@@ -47,15 +48,15 @@ public class Response {
 	}
 	
 	/**
-	 * @return whether or not the response was a 200(success).
+	 * @return whether or not the response was a 200 (success).
 	 */
 	public boolean getSuccess() {
 		return success;
 	}
 	
 	/**
-	 * Returns the data JSON Array of the response. Now the JSON string parsing does
-	 * not need to happen anywhere else
+	 * Returns the data JSON Array of the response. Now the JSON string parsing 
+	 * does not need to happen anywhere else
 	 * 
 	 * @return the data of the response
 	 */

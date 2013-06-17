@@ -20,17 +20,18 @@ public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 	ArrayList<PriceInfo> data = null;
 	
 	/**
-	 * Constructor for the adapter. Takes the context, layout to use for each row,
-	 * and an array list of data to put into the rows
+	 * Constructor for the adapter. Takes the context, layout to use for each 
+	 * row, and an array list of data to put into the rows
 	 * 
 	 * @param context
-	 * 			The context that the list view will be in
+	 * 		The context that the list view will be in
 	 * @param layoutResourceId
-	 * 			The layout to apply to each row
+	 * 		The layout to apply to each row
 	 * @param data
-	 * 			A list of data to fill the rows with
+	 * 		A list of data to fill the rows with
 	 */
-	public ProductAdapter(Context context, int layoutResourceId, ArrayList<PriceInfo> data) {
+	public ProductAdapter(Context context, int layoutResourceId, 
+			ArrayList<PriceInfo> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;

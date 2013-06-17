@@ -29,8 +29,11 @@ import com.android.alcoholpriceapp.util.GPSUtility;
 public class StorePage extends Activity {
 	
 	private ListView listView;
-	private ProgressDialog progressDialog;
 	Store store = null;
+	/** A waiting dialog that pops up to notify the user the app is currently
+	 * conducting the requested search.
+	 */
+	private ProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +57,10 @@ public class StorePage extends Activity {
 		try {
 	    	res = searchTask.execute("GET", "STORE", Integer.toString(id)).get();
 		} catch (Exception e) {
-			// not network error, this is an exception thrown by AsyncTask's execute method
+			// not network error, this is an exception thrown by 
+			// AsyncTask's execute method
 			// TODO: AsyncTask execute exception
 		} 
-		Log.v("debug", "2");
 		
 		progressDialog.setOnCancelListener(new OnCancelListener() {
     		@Override
@@ -65,7 +68,6 @@ public class StorePage extends Activity {
     			if (searchTask != null) searchTask.cancel(true);
     		}
     	});
-		Log.v("debug", "3");
     	
     	if (res.getSuccess()) {
     		GPSUtility gps = new GPSUtility(StorePage.this);
@@ -73,14 +75,18 @@ public class StorePage extends Activity {
     		if (location != null) {
 	    		store = new Store(location, res.getData());
 	    		
-	            StoreAdapter adapter = new StoreAdapter(this, R.layout.product_row, store.getPriceInfos());
+	            StoreAdapter adapter = new StoreAdapter(this, 
+	            		R.layout.product_row, store.getPriceInfos());
 	            
 	            listView = (ListView) findViewById(R.id.productsListView);
 	            listView.setAdapter(adapter);
 	            
-	            TextView storeNameText = (TextView) findViewById(R.id.storeNameText);
-	            TextView storeAddressText = (TextView) findViewById(R.id.storeAddressText);
-	            TextView distText = (TextView) findViewById(R.id.storeDistanceText);
+	            TextView storeNameText = (TextView) 
+	            		findViewById(R.id.storeNameText);
+	            TextView storeAddressText = (TextView) 
+	            		findViewById(R.id.storeAddressText);
+	            TextView distText = (TextView) 
+	            		findViewById(R.id.storeDistanceText);
 	            
 	            storeNameText.setText(store.getName());	
 	            storeAddressText.setText(store.getAddress());
@@ -97,7 +103,7 @@ public class StorePage extends Activity {
 	    		progressDialog.cancel();
     		}
             
-	    	progressDialog.cancel(); //so when you hit back it isnt there
+	    	//progressDialog.cancel(); //so when you hit back it isnt there
     	} else {
     		AlertDialog.Builder builder = new AlertDialog.Builder(StorePage.this);
     		builder
@@ -110,9 +116,11 @@ public class StorePage extends Activity {
     	
     }
 	
-    private OnItemClickListener listviewItemClickListener = new OnItemClickListener() {
+    private OnItemClickListener listviewItemClickListener = 
+    		new OnItemClickListener() {
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, 
+				long arg3) {
 			Intent intent = new Intent(StorePage.this, ProductPage.class);
 			
 			//passing ID to do search on other side

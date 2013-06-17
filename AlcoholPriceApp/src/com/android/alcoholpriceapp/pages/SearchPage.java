@@ -44,12 +44,12 @@ public class SearchPage extends Activity {
 	private Spinner sizeSpinner;
 	/** Search button initiates the search process. */
 	private Button searchButton;
+	/** The size of the alcohol the user has selected. */
+	private String selectedSize;
 	/** A waiting dialog that pops up to notify the user the app is currently
 	 * conducting the requested search.
 	 */
 	private ProgressDialog progressDialog;
-	/** The size of the alcohol the user has selected. */
-	private String selectedSize;
 
 	/**
 	 * Creates the options menu to display on this activity.
@@ -102,7 +102,8 @@ public class SearchPage extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item,
 				SizeTypeUtility.INSTANCE.getSizeList());
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(android.R.layout
+				.simple_spinner_dropdown_item);
 		sizeSpinner.setAdapter(adapter);
 		sizeSpinner.setOnItemSelectedListener(new SizeSpinnerActivity());
 	}
@@ -117,7 +118,6 @@ public class SearchPage extends Activity {
 		public void onClick(View v) {
 			String alcohol = searchEditText.getText().toString();
 			if (checkInput(alcohol, selectedSize)) {
-				Log.v("debug", "1");
 				progressDialog = ProgressDialog.show(SearchPage.this, "Please wait...",
 		    			"Retrieving data...", true, true);
 		    	
@@ -129,10 +129,10 @@ public class SearchPage extends Activity {
 			    			alcohol.toLowerCase().trim(), 
 			    			selectedSize).get();
 				} catch (Exception e) {
-					// not network error, this is an exception thrown by AsyncTask's execute method
+					// not network error, this is an exception thrown by 
+					// AsyncTask's execute method
 					// TODO: AsyncTask execute exception
 				} 
-				Log.v("debug", "2");
 				
 				progressDialog.setOnCancelListener(new OnCancelListener() {
 		    		@Override
@@ -140,10 +140,8 @@ public class SearchPage extends Activity {
 		    			if (searchTask != null) searchTask.cancel(true);
 		    		}
 		    	});
-				Log.v("debug", "3");
 		    	
 		    	if (res.getSuccess()) {
-					Log.v("debug", "4");
 					GPSUtility gps = new GPSUtility(SearchPage.this);
 					Location location = gps.promptForGPS();
 		    		if (location != null) {
@@ -154,8 +152,7 @@ public class SearchPage extends Activity {
 			    		Intent intent = new Intent(SearchPage.this, ProductPage.class);
 			    		intent.putExtra("Product", product);
 			    		intent.putExtra("from", 1);
-						Log.v("debug", "5");
-			    		progressDialog.cancel(); //so when you hit back it isnt there
+			    		progressDialog.cancel(); //so when you hit back it isn't there
 			    		startActivity(intent);
 		    		} else {
 		    			AlertDialog.Builder builder = new AlertDialog.Builder(SearchPage.this);
@@ -181,32 +178,36 @@ public class SearchPage extends Activity {
 	};
 	
 	/**
-	 * Checks the input to make sure the user has actually put in the product name
-	 * and size data. 
+	 * Checks the input to make sure the user has actually put in the product 
+	 * name and size data. 
 	 * 
 	 * @param alcohol
-	 * 			The alcohol product name the user is trying to search for.
+	 * 		The alcohol product name the user is trying to search for.
 	 * @param size
-	 * 			The size of the alcohol the user is trying to search for.
-	 * @return
+	 * 		The size of the alcohol the user is trying to search for.
+	 * @return true if the user hasn inputed an alcohol type and size, and
+	 * false otherwise
 	 */
 	private boolean checkInput(String alcohol, String size) {
 		
 		if (alcohol == null) {
-			Toast.makeText(this, "Please type in an alcohol product name", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please type in an alcohol product name", 
+					Toast.LENGTH_SHORT).show();
 			return false;
 		} else if (size.equals("0")) {
-			Toast.makeText(this, "Please select an alcohol size", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please select an alcohol size", 
+					Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;
 	}
     
     /**
-     * SizeSpinnerActivity allows us to set selectedSize to the current item selected
-     * on the sizeSpinner.
+     * SizeSpinnerActivity allows us to set selectedSize to the current item 
+     * selected on the sizeSpinner.
      */
-    private class SizeSpinnerActivity extends Activity implements OnItemSelectedListener {
+    private class SizeSpinnerActivity extends Activity implements 
+    				OnItemSelectedListener {
     	public void onItemSelected(AdapterView<?> parent, View view,
     			int pos, long id) {
     		

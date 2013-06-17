@@ -33,9 +33,9 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 	 * called when you call execute()
 	 * 
 	 * @param params
-	 * 			[0] - the type of request (GET, POST, PUT, DELETE)
-	 * 			[1] - the model to do request on (product)
-	 * 		  other - explained above call to each function below
+	 * 		[0]   - the type of request (GET, POST, PUT, DELETE)
+	 * 		[1]   - the model to do request on (product)
+	 * 		other - explained above call to each function below
 	 */
 	@Override
 	protected Response doInBackground(String... params) {
@@ -59,7 +59,8 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 				rawResponse = getRequest(params[1].toLowerCase());
 			}
 		} else if (params[0] == "POST") {
-			/* not yet implemented
+			/*
+			 *  not yet implemented
 			 * POST requests are for changing data
 			 */
 		} else if (params[0] == "PUT") {
@@ -101,7 +102,8 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 			DefaultHttpClient client = new DefaultHttpClient();
 			try {
 				HttpResponse response = client.execute(request);
-				in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+				in = new BufferedReader(new InputStreamReader(response
+						.getEntity().getContent()));
 				StringBuffer sb = new StringBuffer("");
 				String l = "";
 				String nl = System.getProperty("line.separator");
