@@ -8,21 +8,32 @@ import android.os.Parcelable;
  * store it's held at, the price of the product at that store, and the distance
  * the store is from the users current GPS location.
  */
+// Can't remember why, but this PriceInfo represents 2 different pieces of 
+// information about the alcohol. One version stores the alcohol name and
+// size while the other stores the store name. Both store the price. It might
+// have something to do with Product and Store both being able to store arrays
+// of the same PriceInfo objects
 public class PriceInfo implements Parcelable {
-	/** Used to do a store search in the database. */
+	/** Used to do a store search in the database */
 	private int storeID;
 	private String storeName;
+	/** Distance from phone to store */
 	private double dist;
 	
+	/** Used to do a alcohol search in the database */
 	private int alcID;
 	private String alcName;
 	private String alcSize;
-	
+
 	private double price;
 
 	/**
-	 * Constructor that takes all data and creates an object from them.
-	 * Used in Product object to make list of PriceInfos
+	 * Boss comment: "Constructor that takes all data and creates an object from 
+	 * them."
+	 * 
+	 * Used in Product object to make list of PriceInfos. This constructor is
+	 * used specifically to construct a PriceInfo that stores the store name,
+	 * price of alcohol and distance to the store.
 	 * 
 	 * @param storeID
 	 * 		ID of the store (for use with SQL database)
@@ -45,6 +56,20 @@ public class PriceInfo implements Parcelable {
 		alcSize = null;
 	}
 	
+	/**
+	 * Used in Store object to make a list of PriceInfos. This constructor is
+	 * used specifically to construct a PriceInfo that stores the alcohol name,
+	 * size and price.
+	 * 
+	 * @param alcID
+	 * 		ID of the alcohol (for use with SQL database)
+	 * @param alcName
+	 * 		Name of the alcohol
+	 * @param alcSize
+	 * 		Size of the alcohol
+	 * @param price
+	 * 		Price of the alcohol
+	 */
 	public PriceInfo(int alcID, String alcName, int alcSize, double price) {
 		this.alcID = alcID;
 		this.alcName = alcName;

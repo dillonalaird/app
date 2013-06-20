@@ -56,7 +56,7 @@ public class Product implements Parcelable {
 	}
 	
 	/**
-	 * Takes a JSON array of the price info for this product, and will turn it
+	 * Takes a JSONObject of the price info for this product, and will turn it
 	 * into the proper array list. Also takes the name and size of the product,
 	 * as well as the current location.
 	 * 
@@ -134,7 +134,7 @@ public class Product implements Parcelable {
 	 * Check http://developer.android.com/reference/android/os/Parcelable.html
 	 * for details. These are all methods for Parcelable.
 	 */
-	
+	@Override
 	public int describeContents() {
 		return 0;
 	}
@@ -143,6 +143,7 @@ public class Product implements Parcelable {
 	 * Creates the parcel when called. The order data is put into the parcel
 	 * is the order that data must be pulled back out.
 	 */
+	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		//we just need to write each field into
 		//the parcel

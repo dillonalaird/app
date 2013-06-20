@@ -13,11 +13,23 @@ import android.widget.TextView;
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.models.PriceInfo;
 
+/**
+ * ProductAdapter represents an ArrayAdapter, which is essentially an array of
+ * arbitrary objects, in our case, PriceInfo objects. Each of these PriceInfo
+ * objects represents a row of important information about the product and can
+ * be displayed in the UI by calling getView. There's a good description of a
+ * ProductAdapter here 
+ * 
+ * http://stackoverflow.com/questions/4300661/please-explain-array-adapters-and-their-purpose-even-better
+ */
 public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 
-	Context context;
-	int layoutResourceId;
-	ArrayList<PriceInfo> data = null;
+	/** The current context we're working with */
+	private Context context;
+	/** An ID by which we can locate the XML layout resource */
+	private int layoutResourceId;
+	/** The list of PriceInfo objects this ProductAdapter is holding */
+	private ArrayList<PriceInfo> data = null;
 	
 	/**
 	 * Constructor for the adapter. Takes the context, layout to use for each 
@@ -32,6 +44,10 @@ public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 	 */
 	public ProductAdapter(Context context, int layoutResourceId, 
 			ArrayList<PriceInfo> data) {
+		// We should test this later but it seems like we're storing
+		// the fields twice, once in ArrayAdapter, and once in ProductAdapter
+		// e.g. there's a method called getContext we can use instead of 
+		// storing context as a private field
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
@@ -39,13 +55,28 @@ public class ProductAdapter extends ArrayAdapter<PriceInfo> {
 	}
 	
 	/**
-	 * pretty sure this is called when each row is created in the listView
+	 * This is called when each row is created in the listView The inflater 
+	 * takes the layout assigned to it and makes it fit the space that it is
+	 * filling.
 	 * 
-	 * The inflater takes the layout assigned to it and makes it fit the
-	 * space that it is filling (im pretty sure)
+	 * @param position
+	 * 		The position of the item you want displayed (position in the Array
+	 * Adapter)
+	 * @param convertView
+	 * 		This is here for performance reasons (check comment below on 
+	 * ListView)
+	 * @param parent
+	 * 		The parent of the View that is returned
+	 * @return a View object to display information from the PriceInfo in the UI
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		// Android's ListView uses an Adapter to fill itself with Views. When 
+		// the ListView is shown, it starts calling getView() to populate 
+		// itself. When the user scrolls a new view should be created, so for 
+		// performance the ListView sends the Adapter an old view that it's not
+		// used any more in the convertView param. Here we're inflating a view
+		// from an XML layout file
 		View row = convertView;
 		ProductHolder holder = null;
 		
