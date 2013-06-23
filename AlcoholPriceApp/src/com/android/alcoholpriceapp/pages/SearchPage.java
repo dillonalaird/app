@@ -72,6 +72,7 @@ public class SearchPage extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		Log.d("SearchPage", "called onCreate");
 		
 		// This is so if there's a connection error with updateSizes or
 		// updateTypes, an AlertDialog box will pop up in this instance

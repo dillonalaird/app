@@ -44,6 +44,8 @@ public class Response {
 			this.success = false;
 			
 			// TODO: somehow log what the string was so that we can see what it was
+			Log.d("Response JSONException", e.toString());
+			Log.d("Response JSONException", jsonStr);
 		}
 	}
 	

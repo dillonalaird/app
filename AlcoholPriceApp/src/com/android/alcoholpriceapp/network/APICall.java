@@ -76,7 +76,7 @@ public class APICall extends AsyncTask<String, Integer, Response> {
 		} else {
 			//improper request type
 		}
-		
+		Log.d("APICall doInBackground", rawResponse);
 		Response res = new Response(rawResponse);
 		return res;
 	}

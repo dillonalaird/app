@@ -47,6 +47,17 @@ public enum SizeTypeUtility {
 	 * them.
 	 */
 	public void updateSizes() {
+		typeConversion.add(new Pair("Single",              "1"));
+		typeConversion.add(new Pair("40 oz",               "2"));
+		typeConversion.add(new Pair("6 pack",              "3"));
+		typeConversion.add(new Pair("12 pack",             "4"));
+		typeConversion.add(new Pair("18 pack",             "5"));
+		typeConversion.add(new Pair("24 pack",             "6"));
+		typeConversion.add(new Pair("Pint (0.375 L)",      "7"));
+		typeConversion.add(new Pair("Fifth (0.75 L)",      "8"));
+		typeConversion.add(new Pair("Half Gallon (1.5 L)", "9"));
+		
+		/*
 		Response res = null;
 		APICall sizeTask = new APICall(context);
 		try {
@@ -56,7 +67,9 @@ public enum SizeTypeUtility {
 			parseData(sizeConversion, sizes);
 		} catch (Exception e) {
 			// this is bad cause this could be a number of things...
+			Log.d("updateSizes, exception thrown", e.toString());
 		}
+		*/
 	}
 	
 	/**
@@ -64,6 +77,15 @@ public enum SizeTypeUtility {
 	 * them.
 	 */
 	public void updateTypes() {
+		sizeConversion.add(new Pair("Beer",    "1"));
+		sizeConversion.add(new Pair("Vodka",   "2"));
+		sizeConversion.add(new Pair("Rum",     "3"));
+		sizeConversion.add(new Pair("Whisky",  "4"));
+		sizeConversion.add(new Pair("Gin",     "5"));
+		sizeConversion.add(new Pair("Tequila", "6"));
+		sizeConversion.add(new Pair("Brandy",  "7"));
+		
+		/*
 		Response res = null;
 		APICall typesTask = new APICall(context);
 		try {
@@ -74,6 +96,7 @@ public enum SizeTypeUtility {
 		} catch (Exception e) {
 			// same here
 		}
+		*/
 	}
 	
 	/**

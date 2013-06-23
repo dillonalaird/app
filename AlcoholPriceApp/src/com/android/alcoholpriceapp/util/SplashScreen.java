@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.android.alcoholpriceapp.R;
 import com.android.alcoholpriceapp.pages.SearchPage;
@@ -18,11 +19,13 @@ public class SplashScreen extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_layout);
+		Log.d("SplashScreen", "called onCreate");
 		
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				// Updates the size and type lists before it launches SearchPage
+				Log.d("SplashScreen Handler", "about to call updateSizes/Types");
 				SizeTypeUtility.INSTANCE.setContext(SplashScreen.this);
 				SizeTypeUtility.INSTANCE.updateSizes();
 				SizeTypeUtility.INSTANCE.updateTypes();
